@@ -1,0 +1,39 @@
+// Colors
+$background-color: #f7f7f7;
+$primary: #064f32;
+$primary-dark: #001f0d;
+$green: #00c853;
+$white: #e5e5e5;
+$hover-background-color: rgba(0, 0, 0, 0.04);
+$yellow: #f1a100;
+$dark-yellow: #976500;
+$dark-blue: #29314f;
+$blue: rgba(0, 143, 251, 1);
+$light-blue: #ebebff;
+$grey: #686868;
+$dark-grey: #444444;
+$light-grey: rgba(0, 0, 0, 0.12);
+$light-green: #c1ffc1;
+$red: rgb(244, 67, 54);
+$peach: #f4969b;
+
+$border-radius: 15px;
+
+:export {
+  primary: $primary;
+  primary_dark: $primary-dark;
+  white: $white;
+  border-radius: $border-radius;
+  background-color: $background-color;
+  yellow: $yellow;
+  dark-yellow: $dark-yellow;
+  green: $green;
+  dark-blue: $dark-blue;
+  blue: $blue;
+  light-blue: $light-blue;
+  light-green: $light-green;
+  red: $red;
+  peach: $peach;
+  grey: $grey;
+  dark-grey: $dark-grey;
+}

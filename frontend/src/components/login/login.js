@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = React.useState("");
@@ -20,7 +19,7 @@ const Login = () => {
 
   return (
     <Container maxWidth="xs">
-      <Paper elevation={3} style={{ padding: '20px' }}>
+      <Paper elevation={3} style={{ padding: '20px', marginTop: '64px'}}>
         <Typography variant="h5" gutterBottom>
           Login
         </Typography>
@@ -32,13 +31,6 @@ const Login = () => {
             margin="normal"
             onChange={(e) => {setEmail(e.target.value)}}
           />
-          {/* <TextField
-            label="Password"
-            fullWidth
-            variant="outlined"
-            type="password"
-            margin="normal"
-          /> */}
           <Button
             variant="contained"
             color="primary"

@@ -23,8 +23,19 @@ const CreateScreen = () => {
   const [disableSave, setDisableSave] = useState(false);
   const [sport, setSport] = useState('');
   const [privateEvent, setPrivateEvent] = React.useState(false);
-  const userId = 'Himanshu';
+  const userId = getCookieValue('user_id');
   const navigate = useNavigate();
+
+  function getCookieValue(key) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(key + '=')) {
+        return decodeURIComponent(cookie.substring(key.length + 1));
+      }
+    }
+    return null; // Return null if the cookie with the given key is not found
+  }
 
   const handlePrivateEventChange = (event) => {
     setPrivateEvent(event.target.checked)
@@ -70,6 +81,10 @@ const CreateScreen = () => {
       });
   };
 
+  const setEventDate = (selectedDate) => {
+    setDate(selectedDate);
+  }
+
   return (
     <Container>
       <Grid container spacing={2}>
@@ -99,7 +114,7 @@ const CreateScreen = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Datepicker />
+          <Datepicker setEventDate={setEventDate}/>
         </Grid>
 
         <Grid item xs={12}>

@@ -5,6 +5,7 @@ import Home from './components/home/Home';
 import Login from './components/login/Login';
 import ProtectedRoutes from './components/login/ProtectedRoute';
 import CreateScreen from './components/createEvent/CreateScreen';
+import JoinEvent from './components/joinEvent/JoinEvent';
 
 
 const router = createBrowserRouter([
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
             path: '/createevent',
             element: <CreateScreen />,
           },
+          {
+            path: '/join',
+            element: <JoinEvent />
+          }
         ],
       },
     ],

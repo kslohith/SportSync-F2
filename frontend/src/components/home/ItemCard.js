@@ -9,7 +9,7 @@ const ItemCard = ({ title, description, date, time }) => {
   return (
     <Card sx={{ minWidth: 275 }}>
         <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+        <Typography variant="h7" gutterBottom>
             {title}
         </Typography>
         <Typography sx={{ mb: 1.5 }} color="text.secondary">

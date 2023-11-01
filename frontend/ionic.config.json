@@ -1,0 +1,7 @@
+{
+  "name": "SportSync",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}

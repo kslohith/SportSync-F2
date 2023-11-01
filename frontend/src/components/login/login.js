@@ -9,9 +9,12 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
+
 const Login = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = React.useState("");
   const tryLogin = () => {
+    document.cookie = 'user_id=' + email;
     navigate('/dashboard');
   }
 
@@ -27,20 +30,20 @@ const Login = () => {
             fullWidth
             variant="outlined"
             margin="normal"
+            onChange={(e) => {setEmail(e.target.value)}}
           />
-          <TextField
+          {/* <TextField
             label="Password"
             fullWidth
             variant="outlined"
             type="password"
             margin="normal"
-          />
+          /> */}
           <Button
             variant="contained"
             color="primary"
             fullWidth
             size="large"
-            type="submit"
             onClick={tryLogin}
           >
             Log In

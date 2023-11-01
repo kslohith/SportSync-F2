@@ -8,6 +8,7 @@ import SportsDropdown from './SportsDropdown';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Datepicker from './Datepicker';
+import { useNavigate } from 'react-router-dom';
 
 
 const CreateScreen = () => {
@@ -23,6 +24,7 @@ const CreateScreen = () => {
   const [sport, setSport] = useState('');
   const [privateEvent, setPrivateEvent] = React.useState(false);
   const userId = 'Himanshu';
+  const navigate = useNavigate();
 
   const handlePrivateEventChange = (event) => {
     setPrivateEvent(event.target.checked)
@@ -60,6 +62,7 @@ const CreateScreen = () => {
     })
       .then((response) => {
         console.log(response);
+        navigate("/dashboard");
       })
       .catch((err) => {
         console.log(err);
@@ -135,19 +138,6 @@ const CreateScreen = () => {
           />} label="Private Event" />
         </FormGroup>
         </Grid>
-
-        {/* <Grid item xs={12}>
-          <Button disabled={disableSave} onClick={createEvent} variant="contained" color="primary">
-            Save
-          </Button>
-          <Button
-            disabled={disableSave}
-            variant="outlined"
-            color="default"
-          >
-            Cancel
-          </Button>
-        </Grid> */}
 
         <Grid item xs={12}>
           <Button variant="contained" onClick={createEvent}>Create Event</Button>

@@ -7,7 +7,7 @@ const Datepicker = () => {
 //   const [value, setValue] = React.useState<Dayjs | null>(null);
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DateTimePicker label="Basic date time picker" />
+        <DateTimePicker label="Game Start Time" />
     </LocalizationProvider>
   );
 }

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from '@mui/material/styles';
-import router from './route';
+import router from './Route';
 import { RouterProvider } from 'react-router-dom';
 import theme from './theme';
 

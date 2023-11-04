@@ -9,7 +9,8 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Datepicker from './Datepicker';
 import { useNavigate } from 'react-router-dom';
-
+import CardContent from '@mui/material/CardContent';
+import Card from '@mui/material/Card';
 
 const CreateScreen = () => {
   const [eventName, setEventName] = useState('');
@@ -86,7 +87,8 @@ const CreateScreen = () => {
   }
 
   return (
-    <Container>
+    <Card variant="outlined">
+    <CardContent>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField
@@ -158,7 +160,8 @@ const CreateScreen = () => {
           <Button variant="contained" onClick={createEvent}>Create Event</Button>
         </Grid>
       </Grid>
-    </Container>
+    </CardContent>
+    </Card>
   );
 }
 

@@ -7,6 +7,8 @@ import axios from "axios";
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import ItemCard from "./ItemCard";
+import { logEvent } from "firebase/analytics";
+import analytics from "../../config/firebaseConfig";
 
 function getCookieValue(key) {
     const cookies = document.cookie.split(';');
@@ -22,9 +24,13 @@ function getCookieValue(key) {
 const Home = () => {
     const [userDetails, setUserDetails] = React.useState([]);
     const [showLoading, setShowLoading] = React.useState(false);
+
     useEffect(() => {
             setShowLoading(true);
             const userName = getCookieValue('user_id')
+            logEvent(analytics, 'user_landed_home_page', {
+                user_email: {userName}
+            });
             if (userName) {
                 axios.get(`https://sportssync-backend.onrender.com/getEventByUser?name=${userName}`)
                 .then((response) => {
@@ -73,7 +79,7 @@ const Home = () => {
                 </Card>
                     {userDetails.map((item, index) => (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                            <ItemCard title={item.eventName} description={item.venue} date={new Date(item.date).toISOString().split('T')[0]} time={new Date(item.date).toISOString().split('T')[1].split('.')[0]} />
+                            <ItemCard title={item.eventName} venue={item.venue} date={new Date(item.date).toISOString().split('T')[0]} time={new Date(item.date).toISOString().split('T')[1].split('.')[0]} />
                         </Grid>
                     ))}
                 </Grid>

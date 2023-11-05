@@ -6,7 +6,12 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
-function ItemCardJoin({ title, venue, date, time, slots }) {
+function ItemCardJoin({ title, venue, date, time, slots, eventId, selectedEvent}) {
+
+  const handleClick = () => {
+    console.log("Selected", eventId);
+    selectedEvent(eventId);
+  }
   return (
     <Card variant="outlined">
       <CardContent>
@@ -31,7 +36,7 @@ function ItemCardJoin({ title, venue, date, time, slots }) {
             <Typography variant="body1">Slots Remaining: {slots} </Typography>
           </Grid>
           <Grid container item xs={12} justifyContent="flex-end">
-            <Button variant="contained" color="primary">
+            <Button variant="contained" color="primary" onClick={handleClick}>
               Join
             </Button>
           </Grid>

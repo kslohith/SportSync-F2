@@ -20,8 +20,9 @@ const ManageEvent = () => {
 
 
     const fetchData = () => {
+        const eventId = 'ysoaiETl'
         setShowLoading(true);
-        axios.get(`https://sportssync-backend.onrender.com/event?eventId=ysoaiETl`)
+        axios.get(`https://sportssync-backend.onrender.com/event?eventId=${eventId}`)
             .then((response) => {
                 setShowLoading(false);
                 setAttendeeDetails(response.data.data);
@@ -38,13 +39,97 @@ const ManageEvent = () => {
     }, []);
 
 
-    const handleClick = () => {
-            console.log(attendeeDetails.attendees);
-          };
         
     const handleRefresh = () => {
         fetchData();
-    }      
+    }
+
+    const removeAttendee = (attendeeName) => {
+        axios({
+          method: 'post',
+          url: 'https://sportssync-backend.onrender.com/event?eventId=ysoaiETl',
+          headers: {},
+          data: {
+            attendees: {
+              op: 'remove',
+              list: [attendeeName],
+            },
+          },
+        })
+          .then((response) => {
+            // Handle success if needed
+            console.log('Attendee removed successfully:', attendeeName);
+            handleRefresh();
+          })
+          .catch((error) => {
+            // Handle error if needed
+            console.error('Error removing attendee:', attendeeName, error);
+          });
+          
+      };
+
+      const denyAttendee = (attendeeName) => {
+        axios({
+          method: 'post',
+          url: 'https://sportssync-backend.onrender.com/event?eventId=ysoaiETl',
+          headers: {},
+          data: {
+            requestedAttendees: {
+              op: 'remove',
+              list: [attendeeName],
+            },
+          },
+        })
+          .then((response) => {
+            // Handle success if needed
+            console.log('Attendee denied successfully:', attendeeName);
+            handleRefresh();
+          })
+          .catch((error) => {
+            // Handle error if needed
+            console.error('Error denying attendee:', attendeeName, error);
+          });
+          
+      };
+
+      
+      const acceptAttendee = (attendeeName) => {
+        axios({
+          method: 'post',
+          url: 'https://sportssync-backend.onrender.com/event?eventId=ysoaiETl',
+          headers: {},
+          data: {
+            requestedAttendees: {
+              op: 'remove',
+              list: [attendeeName],
+            },
+          },
+        })
+
+        axios({
+            method: 'post',
+            url: 'https://sportssync-backend.onrender.com/event?eventId=ysoaiETl',
+            headers: {},
+            data: {
+              attendees: {
+                op: 'add',
+                list: [attendeeName],
+              },
+            },
+          })
+
+          .then((response) => {
+            // Handle success if needed
+            console.log('Attendee added successfully:', attendeeName);
+            handleRefresh();
+          })
+          .catch((error) => {
+            // Handle error if needed
+            console.error('Error adding attendee:', attendeeName, error);
+          });
+          
+      };
+
     
     const containerStyle = {
         width: '100%',
@@ -73,7 +158,7 @@ const ManageEvent = () => {
                     <div style={containerStyle}>
                     {attendeeDetails.requestedAttendees.map((item, index) => (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                            <RequesteeBox attendeeName = {item} />
+                            <RequesteeBox attendeeName = {item} onDenyClick={() => denyAttendee(item)} onAcceptClick ={() => acceptAttendee(item)} />
                             
                         </Grid>
                     ))}
@@ -90,7 +175,7 @@ const ManageEvent = () => {
                 <div style={containerStyle}>
                 {attendeeDetails.attendees.map((item, index) => (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                            <AttendeeBox attendeeName = {item} />
+                            <AttendeeBox attendeeName={item} onRemoveClick={() => removeAttendee(item)}/>
                             
                         </Grid>
                     ))}

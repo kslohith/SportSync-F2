@@ -6,7 +6,16 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 
-const RequesteeBox = ({ attendeeName }) => {
+const RequesteeBox = ({ attendeeName, onDenyClick, onAcceptClick}) => {
+
+  const deny = () => {
+    onDenyClick(attendeeName);
+  }
+
+  const accept = () => {
+    onAcceptClick(attendeeName);
+  }
+
   return (
     <Card variant="outlined">
       <CardContent>
@@ -15,12 +24,12 @@ const RequesteeBox = ({ attendeeName }) => {
             <Typography variant="body1">{attendeeName}</Typography>
           </Grid>
           <Grid container item xs={12} justifyContent="flex-end">
-            <Button variant="outlined" color="success">
+            <Button variant="outlined" color="success" onClick={accept}>
               Accept
             </Button>
           </Grid>
           <Grid container item xs={12} justifyContent="flex-end">
-            <Button variant="outlined" color="error">
+            <Button variant="outlined" color="error" onClick={deny}>
               Deny
             </Button>
           </Grid>

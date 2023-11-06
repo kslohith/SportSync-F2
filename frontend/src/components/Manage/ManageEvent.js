@@ -16,11 +16,11 @@ import RequesteeBox from "./RequesteeBox";
 const ManageEvent = () => {
     const [attendeeDetails, setAttendeeDetails] = React.useState([]);
     const [showLoading, setShowLoading] = React.useState(false);
-
+    const eventId = 'ysoaiETl'
 
 
     const fetchData = () => {
-        const eventId = 'ysoaiETl'
+        
         setShowLoading(true);
         axios.get(`https://sportssync-backend.onrender.com/event?eventId=${eventId}`)
             .then((response) => {
@@ -47,7 +47,7 @@ const ManageEvent = () => {
     const removeAttendee = (attendeeName) => {
         axios({
           method: 'post',
-          url: 'https://sportssync-backend.onrender.com/event?eventId=ysoaiETl',
+          url: `https://sportssync-backend.onrender.com/event?eventId=${eventId}`,
           headers: {},
           data: {
             attendees: {
@@ -71,7 +71,7 @@ const ManageEvent = () => {
       const denyAttendee = (attendeeName) => {
         axios({
           method: 'post',
-          url: 'https://sportssync-backend.onrender.com/event?eventId=ysoaiETl',
+          url: `https://sportssync-backend.onrender.com/event?eventId=${eventId}`,
           headers: {},
           data: {
             requestedAttendees: {
@@ -96,7 +96,7 @@ const ManageEvent = () => {
       const acceptAttendee = (attendeeName) => {
         axios({
           method: 'post',
-          url: 'https://sportssync-backend.onrender.com/event?eventId=ysoaiETl',
+          url: `https://sportssync-backend.onrender.com/event?eventId=${eventId}`,
           headers: {},
           data: {
             requestedAttendees: {
@@ -108,7 +108,7 @@ const ManageEvent = () => {
 
         axios({
             method: 'post',
-            url: 'https://sportssync-backend.onrender.com/event?eventId=ysoaiETl',
+            url: `https://sportssync-backend.onrender.com/event?eventId=${eventId}`,
             headers: {},
             data: {
               attendees: {

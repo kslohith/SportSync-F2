@@ -10,17 +10,7 @@ import ItemCard from "../home/ItemCard";
 import { logEvent } from "firebase/analytics";
 import analytics from "../../config/firebaseConfig";
 import AttendeeBox from "./AttendeeBox";
-
-function getCookieValue(key) {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.startsWith(key + '=')) {
-        return decodeURIComponent(cookie.substring(key.length + 1));
-      }
-    }
-    return null; // Return null if the cookie with the given key is not found
-}
+import RequesteeBox from "./RequesteeBox";
 
 
 const ManageEvent = () => {
@@ -55,7 +45,15 @@ const ManageEvent = () => {
     const handleRefresh = () => {
         fetchData();
     }      
-  
+    
+    const containerStyle = {
+        width: '100%',
+        height: '300px',
+        overflowY: 'scroll', // Vertical scrolling
+        // overflowX: 'scroll', // Uncomment for horizontal scrolling
+    };
+
+        
     const navigate = useNavigate();
 
     return(
@@ -68,22 +66,43 @@ const ManageEvent = () => {
                 <Card sx={{ minWidth: 275, margin: '14px auto' }}>
                     <CardContent>
                     <Typography variant="h5"  gutterBottom>
+                        Requests
+                    </Typography>
+                    </CardContent>
+                    </Card>
+                    <div style={containerStyle}>
+                    {attendeeDetails.requestedAttendees.map((item, index) => (
+                        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                            <RequesteeBox attendeeName = {item} />
+                            
+                        </Grid>
+                    ))}
+                    </div>
+
+            
+                <Card sx={{ minWidth: 275, margin: '14px auto' }}>
+                    <CardContent>
+                    <Typography variant="h5"  gutterBottom>
                         Attendees
                     </Typography>
                     </CardContent>
-                </Card>    
+                </Card>
+                <div style={containerStyle}>
                 {attendeeDetails.attendees.map((item, index) => (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                             <AttendeeBox attendeeName = {item} />
                             
                         </Grid>
                     ))}
+                    </div>
                 </Grid>
                 
             }
-            <button onClick={handleRefresh}>
-        Click me
-      </button>
+            <Grid container item justifyContent="right">
+                <button onClick={handleRefresh}>
+                    Refresh
+                </button>
+             </Grid>
 
 
             <br></br>

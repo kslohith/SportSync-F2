@@ -10,14 +10,14 @@ const AttendeeBox = ({attendeeName}) => {
   return (
     <Card variant="outlined">
     <CardContent>
-      <Grid container spacing={2}>
-        <Grid container item xs={6} spacing={2}>
+      <Grid container spacing={0}>
+        <Grid container item xs={6} spacing={1}>
           <Grid item xs={14}>
             <Typography variant="body1">{attendeeName}</Typography>
           </Grid>
         </Grid>
-        <Grid container item xs={12} justifyContent="flex-end">
-          <Button variant="contained" color="primary">
+        <Grid container item xs={12} justifyContent="end">
+          <Button variant="outlined" color="error">
             Remove
           </Button>
         </Grid>

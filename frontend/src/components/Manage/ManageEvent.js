@@ -29,32 +29,32 @@ const ManageEvent = () => {
 
 
 
+    const fetchData = () => {
+        setShowLoading(true);
+        axios.get(`https://sportssync-backend.onrender.com/event?eventId=ysoaiETl`)
+            .then((response) => {
+                setShowLoading(false);
+                setAttendeeDetails(response.data.data);
+                console.log(attendeeDetails);
+            })
+            .catch((error) => {
+                setShowLoading(false);
+                console.log(error);
+            });
+    };
+
     useEffect(() => {
-            setShowLoading(true);
-            const userName = getCookieValue('user_id')
-            /*
-            logEvent(analytics, 'user_landed_home_page', {
-                user_email: 'ysoaiETl'
-            }); */
-            //if (userName) {
-            if (true) {
-                axios.get(`https://sportssync-backend.onrender.com/event?eventId=ysoaiETl`)
-                .then((response) => {
-                    setShowLoading(false);
-                    setAttendeeDetails(response.data.data); // Access the "data" field
-                    console.log(attendeeDetails);
-                })
-                .catch((error) => {
-                    setShowLoading(false);
-                    console.log(error);
-                });
-            }
-        },[]);
+        fetchData();
+    }, []);
 
 
-        const handleClick = () => {
+    const handleClick = () => {
             console.log(attendeeDetails.attendees);
           };
+        
+    const handleRefresh = () => {
+        fetchData();
+    }      
   
     const navigate = useNavigate();
 
@@ -81,7 +81,7 @@ const ManageEvent = () => {
                 </Grid>
                 
             }
-            <button onClick={handleClick}>
+            <button onClick={handleRefresh}>
         Click me
       </button>
 

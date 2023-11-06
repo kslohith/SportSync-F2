@@ -14,7 +14,6 @@ const AttendeeBox = ({attendeeName}) => {
         <Grid container item xs={6} spacing={2}>
           <Grid item xs={14}>
             <Typography variant="body1">{attendeeName}</Typography>
-            <Typography variant="body1">Yo</Typography>
           </Grid>
         </Grid>
         <Grid container item xs={12} justifyContent="flex-end">

@@ -9,6 +9,9 @@ import Box from '@mui/material/Box';
 import ItemCard from "./ItemCard";
 import { logEvent } from "firebase/analytics";
 import analytics from "../../config/firebaseConfig";
+import PropTypes from 'prop-types';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 function getCookieValue(key) {
     const cookies = document.cookie.split(';');
@@ -21,9 +24,48 @@ function getCookieValue(key) {
     return null; // Return null if the cookie with the given key is not found
 }
 
+function CustomTabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box sx={{ p: 0 }}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
+
+  CustomTabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+  };
+  
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+
 const Home = () => {
     const [userDetails, setUserDetails] = React.useState([]);
     const [showLoading, setShowLoading] = React.useState(false);
+    const [value, setValue] = React.useState(0);
+    const [upcomingGame, setUpcomingGame] = React.useState([]);
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
 
     useEffect(() => {
             setShowLoading(true);
@@ -31,11 +73,27 @@ const Home = () => {
             logEvent(analytics, 'user_landed_home_page', {
                 user_email: {userName}
             });
+            logEvent(analytics, 'screen_view', {
+                firebase_screen: 'Home_page', 
+                firebase_screen_class: ''
+              });
             if (userName) {
                 axios.get(`https://sportssync-backend.onrender.com/getEventByUser?name=${userName}`)
                 .then((response) => {
                     setShowLoading(false);
-                    setUserDetails(response.data.data); // Access the "data" field
+                    setUserDetails(response.data.data); 
+                })
+                .catch((error) => {
+                    setShowLoading(false);
+                    console.log(error);
+                });
+            }
+            setShowLoading(true);
+            if (userName) {
+                axios.get(`https://sportssync-backend.onrender.com/getUpcomingGames?email=${userName}`)
+                .then((response) => {
+                    setShowLoading(false);
+                    setUpcomingGame(response.data.data); 
                 })
                 .catch((error) => {
                     setShowLoading(false);
@@ -60,29 +118,44 @@ const Home = () => {
             {showLoading && <Box sx={{ display: 'flex' }}>
                 <CircularProgress />
             </Box>}
-            {!showLoading && <div style={{width: "100%", margin: '8px'}}>
-                <CardLayout operation={"play"} callback={decideOperation} style={{marginBottom: '8px'}}/>
-                <br />
-                <CardLayout operation={"organize"} callback={decideOperation} style={{margin: '8px'}}/>
-                <br></br>
-                <CardLayout operation={"mentor"} callback={decideOperation} style={{margin: '8px'}}/>
-            </div>
-            }
-            {!showLoading && 
-                <Grid container spacing={2}>
-                <Card sx={{ minWidth: 275, marginTop: '14px', marginLeft: '16px' }}>
-                    <CardContent>
-                    <Typography variant="h7"  gutterBottom>
-                        Upcoming Events
-                    </Typography>
-                    </CardContent>
-                </Card>
-                    {userDetails.map((item, index) => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                            <ItemCard title={item.eventName} venue={item.venue} date={new Date(item.date).toISOString().split('T')[0]} time={new Date(item.date).toISOString().split('T')[1].split('.')[0]} />
-                        </Grid>
-                    ))}
+            {!showLoading && <Grid container spacing={2}>
+                <Grid item xs={4}>
+                    <CardLayout operation={"play"} callback={decideOperation} style={{marginBottom: '8px'}}/>
                 </Grid>
+                <Grid item xs={4}>
+                    <CardLayout operation={"organize"} callback={decideOperation} style={{margin: '8px'}}/>
+                </Grid>
+                <Grid item xs={4}>
+                    <CardLayout operation={"mentor"} callback={decideOperation} style={{margin: '8px'}}/>
+                </Grid>
+            </Grid>
+            }
+            {!showLoading && <Box sx={{ width: '100%', padding: '0px' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider', padding: '8px' }}>
+                    <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
+                    <Tab label="My Events" {...a11yProps(0)} />
+                    <Tab label="Upcoming Games" {...a11yProps(1)} />
+                    </Tabs>
+                </Box>
+                <CustomTabPanel value={value} index={0}>
+                    <Grid container spacing={2} style={{ padding: '0px'}}>
+                        {userDetails.map((item, index) => (
+                            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                                <ItemCard title={item.eventName} venue={item.venue} date={new Date(item.date).toISOString().split('T')[0]} time={new Date(item.date).toISOString().split('T')[1].split('.')[0]} />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={1}>
+                    <Grid container spacing={2}>
+                        {upcomingGame.map((item, index) => (
+                            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                                <ItemCard title={item.eventName} venue={item.venue} date={new Date(item.date).toISOString().split('T')[0]} time={new Date(item.date).toISOString().split('T')[1].split('.')[0]} />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </CustomTabPanel>
+                </Box>
             }
             <br></br>
             <br></br>

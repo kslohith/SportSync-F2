@@ -45,6 +45,10 @@ const CreateScreen = () => {
     logEvent(analytics, 'user_landed_create_event', {
         user_email: {userName}
     });
+    logEvent(analytics, 'screen_view', {
+      firebase_screen: 'create_event', 
+      firebase_screen_class: ''
+    });
   },[]);
 
   const handlePrivateEventChange = (event) => {

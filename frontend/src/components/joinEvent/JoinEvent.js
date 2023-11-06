@@ -91,6 +91,10 @@ function FilteredCardList() {
     logEvent(analytics, 'user_landed_join_event', {
         user_email: {userName}
     });
+    logEvent(analytics, 'screen_view', {
+      firebase_screen: 'join_event', 
+      firebase_screen_class: ''
+    });
     if(selectedJoinEvent.length > 0){
       getEventDetails();
       setShowPopup(true);

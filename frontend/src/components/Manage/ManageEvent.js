@@ -179,7 +179,7 @@ const ManageEvent = () => {
                 ))}
               </div>
             </Grid>
-          )}
+          }
           <Grid container item justifyContent="right">
             <button onClick={handleRefresh}>
               Refresh
@@ -190,6 +190,7 @@ const ManageEvent = () => {
           <br></br>
         </>
       );
-    }      
+    }     
+ 
 
 export default ManageEvent;

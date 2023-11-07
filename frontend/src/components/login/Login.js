@@ -56,6 +56,7 @@ const Login = () => {
       alert("Please generate a verification code first.");
     } else if (parseInt(enteredCode) === verificationCode) {
       // Correct verification code, navigate to the dashboard
+      document.cookie = 'user_id=' + email;
       navigate('/dashboard');
     } else {
       alert("Incorrect verification code. Please try again.");

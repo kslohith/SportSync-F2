@@ -31,7 +31,7 @@ const router = createBrowserRouter([
             element: <CreateScreen />,
           },
           {
-            path: '/manageevent',
+            path: "/manage-event/:eventId",
             element: <ManageEvent />
           },
           {

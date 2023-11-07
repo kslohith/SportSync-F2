@@ -7,8 +7,17 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import DateRangeIcon from '@mui/icons-material/DateRange';
+import { useNavigate } from 'react-router-dom';
 
-const ItemCard = ({ title, venue, date, time }) => {
+const ItemCard = ({ title, eventId, venue, date, time }) => {
+
+  const navigate = useNavigate();
+
+  const handleManageClick = () => {
+    // Navigate to the ManageEvent page with the id parameter
+    navigate(`/manage-event/${eventId}`);
+  };
+
   return (
     <Card variant="outlined" style={{ width: '315px', height: '180px' }}>
     <CardContent>
@@ -34,7 +43,7 @@ const ItemCard = ({ title, venue, date, time }) => {
             </Grid>
         </Grid>
         <Grid container item xs={12} justifyContent="flex-end">
-          <Button variant="contained" color="primary">
+          <Button variant="contained" color="primary" onClick={handleManageClick}>
             Manage
           </Button>
         </Grid>

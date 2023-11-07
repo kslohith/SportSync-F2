@@ -6,6 +6,7 @@ import Login from './components/login/Login';
 import ProtectedRoutes from './components/login/ProtectedRoute';
 import CreateScreen from './components/createEvent/CreateScreen';
 import JoinEvent from './components/joinEvent/JoinEvent';
+import ManageEvent from './components/Manage/ManageEvent';
 
 
 const router = createBrowserRouter([
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
           {
             path: '/createevent',
             element: <CreateScreen />,
+          },
+          {
+            path: "/manage-event/:eventId",
+            element: <ManageEvent />
           },
           {
             path: '/join',

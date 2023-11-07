@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, Typography, Container, Grid } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
@@ -11,6 +11,8 @@ import Datepicker from './Datepicker';
 import { useNavigate } from 'react-router-dom';
 import CardContent from '@mui/material/CardContent';
 import Card from '@mui/material/Card';
+import { logEvent } from "firebase/analytics";
+import analytics from "../../config/firebaseConfig";
 
 const CreateScreen = () => {
   const [eventName, setEventName] = useState('');
@@ -37,6 +39,17 @@ const CreateScreen = () => {
     }
     return null; // Return null if the cookie with the given key is not found
   }
+
+  useEffect(() => {
+    const userName = getCookieValue('user_id')
+    logEvent(analytics, 'user_landed_create_event', {
+        user_email: {userName}
+    });
+    logEvent(analytics, 'screen_view', {
+      firebase_screen: 'create_event', 
+      firebase_screen_class: ''
+    });
+  },[]);
 
   const handlePrivateEventChange = (event) => {
     setPrivateEvent(event.target.checked)
@@ -73,6 +86,10 @@ const CreateScreen = () => {
       },
     })
       .then((response) => {
+        const userName = getCookieValue('user_id')
+        logEvent(analytics, 'user_created_event', {
+            user_email: {userName}
+        });
         console.log(response);
         navigate("/dashboard");
       })

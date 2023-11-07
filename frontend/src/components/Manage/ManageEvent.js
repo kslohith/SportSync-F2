@@ -145,9 +145,15 @@ const ManageEvent = () => {
           {showLoading && <Box sx={{ display: 'flex' }}>
             <CircularProgress />
           </Box>}
+          <Grid container item justifyContent="right">
+            <button onClick={handleRefresh}>
+              Edit
+            </button>
+          </Grid>
+
           {!showLoading && attendeeDetails.attendees && (
             <Grid container spacing={2}>
-              {attendeeDetails.isPrivate && (
+              {true && (
                 <Card sx={{ minWidth: 275, margin: '14px auto' }}>
                   <CardContent>
                     <Typography variant="h5" gutterBottom>
@@ -156,7 +162,7 @@ const ManageEvent = () => {
                   </CardContent>
                 </Card>
               )}
-              {attendeeDetails.isPrivate && attendeeDetails.requestedAttendees.length > 0 && (
+              { attendeeDetails.requestedAttendees.length > 0 && (
                 <div style={containerStyle}>
                   {attendeeDetails.requestedAttendees.map((item, index) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
@@ -165,7 +171,7 @@ const ManageEvent = () => {
                   ))}
                 </div>
               )}
-              {attendeeDetails.isPrivate && attendeeDetails.requestedAttendees.length === 0 && (
+              {attendeeDetails.requestedAttendees.length === 0 && (
                 <Typography variant="h7" style={{ textAlign: 'center', fontStyle: 'italic', justifyContent: 'center' }}>
                   No pending requests
                 </Typography>

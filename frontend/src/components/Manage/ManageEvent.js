@@ -140,59 +140,63 @@ const ManageEvent = () => {
         
     const navigate = useNavigate();
 
-    return(
+    return (
         <>
-            {showLoading && <Box sx={{ display: 'flex' }}>
-                <CircularProgress />
-            </Box>}
-            {!showLoading && attendeeDetails.attendees &&
-                <Grid container spacing={2}>
+          {showLoading && <Box sx={{ display: 'flex' }}>
+            <CircularProgress />
+          </Box>}
+          {!showLoading && attendeeDetails.attendees && (
+            <Grid container spacing={2}>
+              {attendeeDetails.isPrivate && (
                 <Card sx={{ minWidth: 275, margin: '14px auto' }}>
-                    <CardContent>
-                    <Typography variant="h5"  gutterBottom>
-                        Requests
+                  <CardContent>
+                    <Typography variant="h5" gutterBottom>
+                      Requests
                     </Typography>
-                    </CardContent>
-                    </Card>
-                    <div style={containerStyle}>
-                    {attendeeDetails.requestedAttendees.map((item, index) => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                            <RequesteeBox attendeeName = {item} onDenyClick={() => denyAttendee(item)} onAcceptClick ={() => acceptAttendee(item)} />
-                            
-                        </Grid>
-                    ))}
-                    </div>
-
-            
-                <Card sx={{ minWidth: 275, margin: '14px auto' }}>
-                    <CardContent>
-                    <Typography variant="h5"  gutterBottom>
-                        Attendees
-                    </Typography>
-                    </CardContent>
+                  </CardContent>
                 </Card>
+              )}
+              {attendeeDetails.isPrivate && attendeeDetails.requestedAttendees.length > 0 && (
                 <div style={containerStyle}>
+                  {attendeeDetails.requestedAttendees.map((item, index) => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                      <RequesteeBox attendeeName={item} onDenyClick={() => denyAttendee(item)} onAcceptClick={() => acceptAttendee(item)} />
+                    </Grid>
+                  ))}
+                </div>
+              )}
+              {attendeeDetails.isPrivate && attendeeDetails.requestedAttendees.length === 0 && (
+                <Typography variant="h7" style={{ textAlign: 'center', fontStyle: 'italic', justifyContent: 'center' }}>
+                  No pending requests
+                </Typography>
+              )}
+      
+              <Card sx={{ minWidth: 275, margin: '14px auto' }}>
+                <CardContent>
+                  <Typography variant="h5" gutterBottom>
+                    Attendees
+                  </Typography>
+                </CardContent>
+              </Card>
+              <div style={containerStyle}>
                 {attendeeDetails.attendees.map((item, index) => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                            <AttendeeBox attendeeName={item} onRemoveClick={() => removeAttendee(item)}/>
-                            
-                        </Grid>
-                    ))}
-                    </div>
-                </Grid>
-                
-            }
-            <Grid container item justifyContent="right">
-                <button onClick={handleRefresh}>
-                    Refresh
-                </button>
-             </Grid>
-
-
-            <br></br>
-            <br></br>
+                  <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                    <AttendeeBox attendeeName={item} onRemoveClick={() => removeAttendee(item)} />
+                  </Grid>
+                ))}
+              </div>
+            </Grid>
+          )}
+          <Grid container item justifyContent="right">
+            <button onClick={handleRefresh}>
+              Refresh
+            </button>
+          </Grid>
+      
+          <br></br>
+          <br></br>
         </>
-    );
-}
+      );
+    }      
 
 export default ManageEvent;

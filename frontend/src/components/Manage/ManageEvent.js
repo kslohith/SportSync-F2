@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import React, { useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import CardLayout from "../home/Card";
 import { Card, CardContent, Typography, Grid, Container } from '@mui/material';
 import axios from "axios";
@@ -16,11 +16,10 @@ import RequesteeBox from "./RequesteeBox";
 const ManageEvent = () => {
     const [attendeeDetails, setAttendeeDetails] = React.useState([]);
     const [showLoading, setShowLoading] = React.useState(false);
-    const eventId = 'ysoaiETl'
+    const {eventId} = useParams();
 
 
     const fetchData = () => {
-        
         setShowLoading(true);
         axios.get(`https://sportssync-backend.onrender.com/event?eventId=${eventId}`)
             .then((response) => {

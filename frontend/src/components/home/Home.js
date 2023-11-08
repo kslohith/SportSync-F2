@@ -141,7 +141,7 @@ const Home = () => {
                     <Grid container spacing={2} style={{ padding: '0px'}}>
                         {userDetails.map((item, index) => (
                             <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                                <ItemCard title={item.eventName} eventId ={item.eventId} venue={item.venue} date={new Date(item.date).toISOString().split('T')[0]} time={new Date(item.date).toISOString().split('T')[1].split('.')[0]} />
+                                <ItemCard title={item.eventName} eventId ={item.eventId} venue={item.venue} date={new Date(item.date).toISOString().split('T')[0]} time={new Date(item.date).toISOString().split('T')[1].split('.')[0]} sport={item.sport} />
                             </Grid>
                         ))}
                     </Grid>
@@ -150,7 +150,7 @@ const Home = () => {
                     <Grid container spacing={2}>
                         {upcomingGame.map((item, index) => (
                             <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                                <ItemCard title={item.eventName} venue={item.venue} date={new Date(item.date).toISOString().split('T')[0]} time={new Date(item.date).toISOString().split('T')[1].split('.')[0]} />
+                                <ItemCard title={item.eventName} venue={item.venue} date={new Date(item.date).toISOString().split('T')[0]} time={new Date(item.date).toISOString().split('T')[1].split('.')[0]} sport={item.sport} />
                             </Grid>
                         ))}
                     </Grid>

@@ -8,8 +8,9 @@ import Grid from '@mui/material/Grid';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import { useNavigate } from 'react-router-dom';
+import SportsIcon from './SportsIcon';
 
-const ItemCard = ({ title, eventId, venue, date, time }) => {
+const ItemCard = ({ title, eventId, venue, date, time, sport }) => {
 
   const navigate = useNavigate();
 
@@ -26,10 +27,16 @@ const ItemCard = ({ title, eventId, venue, date, time }) => {
           <Grid item xs={14}>
             <Typography variant="body1" fontWeight="bold" style={{ textTransform: 'uppercase', fontSize: '14px' }}>{title}</Typography>
           </Grid>
-          <Grid container xs={12} style={{ marginLeft: '10px'}}>
+          <Grid container xs={12} style={{ marginLeft: '10px', marginTop: '4px'}}>
             <Grid item xs={2}><LocationOnIcon /></Grid>
             <Grid item xs={10}>
               <Typography variant="body1">{venue}</Typography>
+            </Grid>
+          </Grid>
+          <Grid container xs={12} style={{ marginLeft: '10px'}}>
+            <Grid item xs={2}><SportsIcon sport={sport} /></Grid>
+            <Grid item xs={9} style={{marginLeft: '4px'}}>
+              <Typography variant="body1">{sport}</Typography>
             </Grid>
           </Grid>
         </Grid>

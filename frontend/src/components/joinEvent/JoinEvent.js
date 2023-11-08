@@ -43,6 +43,15 @@ function getCookieValue(key) {
   return null;
 }
 
+
+const getFormattedDate = (inputDate) => {
+  var year = inputDate.getFullYear();
+  var month = (inputDate.getMonth() + 1).toString().padStart(2, '0');
+  var day = inputDate.getDate().toString().padStart(2, '0');
+  var formattedDate = year + "-" + month + "-" + day;
+  return formattedDate;
+}
+
 function FilteredCardList() {
   const [selectedSport, setSelectedSport] = useState('');
   const [selectedDate, setSelectedDate] = useState(null);
@@ -67,11 +76,10 @@ function FilteredCardList() {
         .then((response) => {
           setShowLoading(false);
           setUserDetails(response.data.data);
-
           // Filter events based on selected sport and date
           const filteredEvents = response.data.data.filter((item) => {
             const sportMatches = selectedSport === '' || item.sport === selectedSport;
-            const dateMatches = !selectedDate || new Date(item.date).toDateString() === selectedDate.toDateString();
+            const dateMatches = !selectedDate || getFormattedDate(new Date(item.date)) === selectedDate?.split('T')[0];
             return sportMatches && dateMatches;
           });
           setFilteredEvents(filteredEvents);
@@ -163,8 +171,7 @@ function FilteredCardList() {
           </Grid>
           <Grid item xs={6} sm={6}>
             <Datepicker
-              selectedDate={selectedDate}
-              onDateChange={handleDateChange}
+              setEventDate={handleDateChange}
             />
           </Grid>
         </Grid>

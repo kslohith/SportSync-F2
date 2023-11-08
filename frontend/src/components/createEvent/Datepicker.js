@@ -6,7 +6,6 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 const Datepicker = ({setEventDate}) => {
   const [selectedDate, setSelectedDate] = React.useState(null);
   const handleDateChange = (dateSelected) => {
-    console.log(new Date(dateSelected).toISOString());
     setSelectedDate(new Date(dateSelected).toISOString());
     setEventDate(new Date(dateSelected).toISOString());
   }

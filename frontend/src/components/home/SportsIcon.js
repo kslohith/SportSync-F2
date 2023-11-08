@@ -9,7 +9,6 @@ import SportsGolfIcon from '@mui/icons-material/SportsGolf';
 
 const SportsIcon = ({sport}) => {
     const getSports = () => {
-        console.log(sport);
         switch(sport){
             case "Cricket": return <SportsCricketIcon />;
             case "Soccer": return <SportsSoccerIcon />;

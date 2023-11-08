@@ -75,7 +75,7 @@ const Home = () => {
             });
             logEvent(analytics, 'screen_view', {
                 firebase_screen: 'Home_page', 
-                firebase_screen_class: ''
+                firebase_screen_class: 'Home_page'
               });
             if (userName) {
                 axios.get(`https://sportssync-backend.onrender.com/getEventByUser?name=${userName}`)

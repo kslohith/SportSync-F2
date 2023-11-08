@@ -47,7 +47,7 @@ const CreateScreen = () => {
     });
     logEvent(analytics, 'screen_view', {
       firebase_screen: 'create_event', 
-      firebase_screen_class: ''
+      firebase_screen_class: 'create_event'
     });
   },[]);
 

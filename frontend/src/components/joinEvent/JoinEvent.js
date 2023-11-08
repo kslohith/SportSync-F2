@@ -17,7 +17,7 @@ import MuiAlert from '@mui/material/Alert';
 import { logEvent } from "firebase/analytics";
 import analytics from "../../config/firebaseConfig";
 
-const sportsData = ['Football', 'Basketball', 'Tennis', 'Cricket', 'Baseball'];
+const sportsData = ['Football', 'Basketball', 'Tennis', 'Cricket', 'Baseball', 'Badminton', 'Squash', 'Golf'];
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -103,7 +103,7 @@ function FilteredCardList() {
     });
     logEvent(analytics, 'screen_view', {
       firebase_screen: 'join_event', 
-      firebase_screen_class: ''
+      firebase_screen_class: 'join_event'
     });
     if (selectedJoinEvent.length > 0) {
       getEventDetails();

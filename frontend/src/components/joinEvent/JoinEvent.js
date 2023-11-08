@@ -182,7 +182,7 @@ function FilteredCardList() {
             <Grid container spacing={2}>
               {filteredEvents.map((item, index) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                  <ItemCardJoin title={item.eventName} venue={item.venue} date={new Date(item.date).toISOString().split('T')[0]} slots={item.slotsRemaining} eventId={item.eventId} selectedEvent={setSelectedJoinEvent} />
+                  <ItemCardJoin title={item.eventName} venue={item.venue} date={new Date(item.date).toISOString().split('T')[0]} slots={item.slotsRemaining} eventId={item.eventId} selectedEvent={setSelectedJoinEvent} sport={item.sport} />
                 </Grid>
               ))}
             </Grid>

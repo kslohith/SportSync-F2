@@ -7,8 +7,9 @@ import Typography from '@mui/material/Typography';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import SportsIcon from './SportsIcon';
 
-function ItemCardJoin({ title, venue, date, time, slots, eventId, selectedEvent}) {
+function ItemCardJoin({ title, venue, date, time, slots, eventId, selectedEvent, sport}) {
 
   const handleClick = () => {
     console.log("Selected", eventId);
@@ -30,6 +31,12 @@ function ItemCardJoin({ title, venue, date, time, slots, eventId, selectedEvent}
                 <Typography variant="body1">{venue}</Typography>
               </Grid>
             </Grid>
+            <Grid container xs={12} style={{ marginLeft: '10px'}}>
+            <Grid item xs={2}><SportsIcon sport={sport} /></Grid>
+            <Grid item xs={9} style={{marginLeft: '4px'}}>
+              <Typography variant="body1">{sport}</Typography>
+            </Grid>
+          </Grid>
           </Grid>
           <Grid container item xs={6} spacing={2}>
             <Grid item xs={2}>

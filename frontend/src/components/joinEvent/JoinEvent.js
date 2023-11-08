@@ -19,7 +19,6 @@ import analytics from "../../config/firebaseConfig";
 
 const sportsData = ['Football', 'Basketball', 'Tennis', 'Cricket', 'Baseball'];
 
-
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -34,51 +33,62 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 function getCookieValue(key) {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.startsWith(key + '=')) {
-        return decodeURIComponent(cookie.substring(key.length + 1));
-      }
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim();
+    if (cookie.startsWith(key + '=')) {
+      return decodeURIComponent(cookie.substring(key.length + 1));
     }
-    return null; // Return null if the cookie with the given key is not found
+  }
+  return null;
 }
 
 function FilteredCardList() {
-  const [joinedEvent, setJoinedEvent] = useState('');
   const [selectedSport, setSelectedSport] = useState('');
-  const [selectedDateRange, setSelectedDateRange] = useState([null, null]);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [joinedEvent, setJoinedEvent] = useState('');
   const [userDetails, setUserDetails] = React.useState([]);
   const [showLoading, setShowLoading] = React.useState(false);
   const [selectedJoinEvent, setSelectedJoinEvent] = useState('');
   const [alertOpen, setAlertOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+
   const handleClose = () => {
     setSelectedJoinEvent('');
     setShowPopup(false);
   };
+
   useEffect(() => {
     setShowLoading(true);
-    const userName = getCookieValue('user_id')
+    const userName = getCookieValue('user_id');
     if (userName) {
-        axios.get(`https://sportssync-backend.onrender.com/getAllEvents`)
+      axios.get(`https://sportssync-backend.onrender.com/getAllEvents`)
         .then((response) => {
-            setShowLoading(false);
-            setUserDetails(response.data.data); // Access the "data" field
+          setShowLoading(false);
+          setUserDetails(response.data.data);
+
+          // Filter events based on selected sport and date
+          const filteredEvents = response.data.data.filter((item) => {
+            const sportMatches = selectedSport === '' || item.sport === selectedSport;
+            const dateMatches = !selectedDate || new Date(item.date).toDateString() === selectedDate.toDateString();
+            return sportMatches && dateMatches;
+          });
+          setFilteredEvents(filteredEvents);
         })
         .catch((error) => {
-            setShowLoading(false);
-            console.log(error);
+          setShowLoading(false);
+          console.log(error);
         });
     }
-  },[]);
+  }, [selectedSport, selectedDate]);
 
   const handleSportChange = (event) => {
     setSelectedSport(event.target.value);
   };
 
-  const handleDateRangeChange = (dateRange) => {
-    setSelectedDateRange(dateRange);
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
   };
 
   const getEventDetails = () => {
@@ -87,46 +97,43 @@ function FilteredCardList() {
   }
 
   useEffect(() => {
-    const userName = getCookieValue('user_id')
+    const userName = getCookieValue('user_id');
     logEvent(analytics, 'user_landed_join_event', {
-        user_email: {userName}
+      user_email: { userName }
     });
     logEvent(analytics, 'screen_view', {
       firebase_screen: 'join_event', 
       firebase_screen_class: ''
     });
-    if(selectedJoinEvent.length > 0){
+    if (selectedJoinEvent.length > 0) {
       getEventDetails();
       setShowPopup(true);
     }
-  },[selectedJoinEvent]);
+  }, [selectedJoinEvent]);
 
   const handleJoinEvent = (eventId) => {
-    const userName = getCookieValue('user_id')
+    const userName = getCookieValue('user_id');
     logEvent(analytics, 'user_joined_event', {
-        user_email: {userName}
+      user_email: { userName }
     });
-    if(eventId?.length > 0){
-      console.log("Inside join select");
+    if (eventId?.length > 0) {
       joinedEvent[0]?.requestedAttendees.push(getCookieValue('user_id'));
-      console.log(joinedEvent,selectedJoinEvent);
       setShowLoading(true);
-      axios.post(`https://sportssync-backend.onrender.com/event`,joinedEvent[0],{
-        params: {eventId: selectedJoinEvent}
+      axios.post(`https://sportssync-backend.onrender.com/event`, joinedEvent[0], {
+        params: { eventId: selectedJoinEvent }
       })
       .then((response) => {
-              setShowLoading(false);
-              setShowPopup(false);
-              setAlertOpen(true);
+        setShowLoading(false);
+        setShowPopup(false);
+        setAlertOpen(true);
       })
       .catch((error) => {
-              setShowLoading(false);
-              console.log(error);
-              setShowPopup(false);
+        setShowLoading(false);
+        console.log(error);
+        setShowPopup(false);
       });
     }
   }
-
 
   const handleAlertClose = () => {
     setAlertOpen(false);
@@ -135,93 +142,96 @@ function FilteredCardList() {
   return (
     <Container>
       <Box my={3}>
-      <Grid container spacing={2} alignItems="center" direction="row">
-        <Grid item xs={6} sm={6}>
-          <FormControl fullWidth>
-            <InputLabel htmlFor="sport-filter">Sport</InputLabel>
-            <Select
-              value={selectedSport}
-              onChange={handleSportChange}
-              label="Sport"
-              id="sport-filter"
-            >
-              <MenuItem value="">All</MenuItem>
-              {sportsData.map((sport) => (
-                <MenuItem key={sport} value={sport}>
-                  {sport}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+        <Grid container spacing={2} alignItems="center" direction="row">
+          <Grid item xs={6} sm={6}>
+            <FormControl fullWidth>
+              <InputLabel htmlFor="sport-filter">Sport</InputLabel>
+              <Select
+                value={selectedSport}
+                onChange={handleSportChange}
+                label="Sport"
+                id="sport-filter"
+              >
+                <MenuItem value="">All</MenuItem>
+                {sportsData.map((sport) => (
+                  <MenuItem key={sport} value={sport}>
+                    {sport}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={6} sm={6}>
+            <Datepicker
+              selectedDate={selectedDate}
+              onDateChange={handleDateChange}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={6} sm={6}>
-          <Datepicker
-            selectedDateRange={selectedDateRange}
-            onDateRangeChange={handleDateRangeChange}
-          />
-        </Grid>
-      </Grid>
-    </Box>
+      </Box>
+
       {showLoading && <Box sx={{ display: 'flex' }}>
-                <CircularProgress />
-            </Box>
+        <CircularProgress />
+      </Box>}
+
+      {!showLoading &&
+        <>
+          {filteredEvents.length === 0 ? (
+            <Typography variant="h5" align="center">No Events Organized On This Day</Typography>
+          ) : (
+            <Grid container spacing={2}>
+              {filteredEvents.map((item, index) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                  <ItemCardJoin title={item.eventName} venue={item.venue} date={new Date(item.date).toISOString().split('T')[0]} slots={item.slotsRemaining} eventId={item.eventId} selectedEvent={setSelectedJoinEvent} sport={item.sport} />
+                </Grid>
+              ))}
+            </Grid>
+          )}
+          <br />
+          <br />
+        </>
       }
 
-      {/* Example Card */}
-      {!showLoading && 
-                <>
-                <Grid container spacing={2}>
-                    {userDetails.map((item, index) => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                            <ItemCardJoin title={item.eventName} venue={item.venue} date={new Date(item.date).toISOString().split('T')[0]} time={new Date(item.date).toISOString().split('T')[1].split('.')[0]} slots={item.slotsRemaining} eventId={item.eventId} selectedEvent={setSelectedJoinEvent} sport={item.sport}/>
-                        </Grid>
-                    ))}
-                </Grid>
-                <br></br>
-                <br></br>
-                </>
-            }
-
       <React.Fragment>
-      <BootstrapDialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={showPopup}
-      >
-        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          {joinedEvent[0]?.eventName}
-        </DialogTitle>
-        <IconButton
-          aria-label="close"
-          onClick={handleClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
+        <BootstrapDialog
+          onClose={handleClose}
+          aria-labelledby="customized-dialog-title"
+          open={showPopup}
         >
-          <CloseIcon />
-        </IconButton>
-        <DialogContent dividers>
-          <Typography gutterBottom>
-            Sport: {joinedEvent[0]?.sport}
-          </Typography>
-          <Typography gutterBottom>
-            Venue: {joinedEvent[0]?.venue}
-          </Typography>
-          <Typography gutterBottom>
-            Slots Remaining: {joinedEvent[0]?.slotsRemaining}
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={() => {handleJoinEvent(joinedEvent[0]?.eventId)}}>
-            Request to Join
-          </Button>
-        </DialogActions>
-      </BootstrapDialog>
-    </React.Fragment>
-    <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleClose}>
+          <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+            {joinedEvent[0]?.eventName}
+          </DialogTitle>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <DialogContent dividers>
+            <Typography gutterBottom>
+              Sport: {joinedEvent[0]?.sport}
+            </Typography>
+            <Typography gutterBottom>
+              Venue: {joinedEvent[0]?.venue}
+            </Typography>
+            <Typography gutterBottom>
+              Slots Remaining: {joinedEvent[0]?.slotsRemaining}
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={() => {handleJoinEvent(joinedEvent[0]?.eventId)}}>
+              Request to Join
+            </Button>
+          </DialogActions>
+        </BootstrapDialog>
+      </React.Fragment>
+      <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
         <Alert onClose={handleAlertClose} severity="success" sx={{ width: '100%' }}>
           Successfully Sent Request to Join the game !
         </Alert>

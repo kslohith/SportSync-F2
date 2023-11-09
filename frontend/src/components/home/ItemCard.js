@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router-dom';
 import { ManageEventModal } from '../Manage/MangeEventModal';
 import SportsIcon from './SportsIcon';
 
-const userName = getCookieValue('user_id');
 
 function getCookieValue(key) {
   const cookies = document.cookie.split(';');
@@ -28,7 +27,7 @@ const ItemCard = (props) => {
   const [cardItem, setCardItem] = useState(props.cardItem);
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
-
+  const userName = getCookieValue('user_id');
 
   const handleAttendeesClick = () => {
     // Navigate to the ManageEvent page with the id parameter

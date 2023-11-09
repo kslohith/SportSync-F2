@@ -6,7 +6,7 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 const SportsDropdown = (props) => {
-    const {setSportName} = props
+    const {setSportName, sport} = props
     const [selectedSport, setSelectedSport] = React.useState("");
 
     const handleChange = (event) =>{
@@ -18,11 +18,11 @@ const SportsDropdown = (props) => {
         <>
             <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Select Sport</InputLabel>
+                <InputLabel id="demo-simple-select-label">Sport</InputLabel>
                 <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={selectedSport}
+                value={sport}
                 label="Sport"
                 onChange={handleChange}
                 >

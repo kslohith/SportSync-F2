@@ -16,6 +16,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { logEvent } from "firebase/analytics";
 import analytics from "../../config/firebaseConfig";
+import { useOutletContext } from 'react-router-dom';
 
 const sportsData = ['Football', 'Basketball', 'Tennis', 'Cricket', 'Baseball', 'Badminton', 'Squash', 'Golf'];
 
@@ -53,10 +54,11 @@ const getFormattedDate = (inputDate) => {
 }
 
 function FilteredCardList() {
+  const [ABmode, setABmode] = useOutletContext();
+  const [joinedEvent, setJoinedEvent] = useState('');
   const [selectedSport, setSelectedSport] = useState('');
   const [selectedDate, setSelectedDate] = useState(null);
   const [filteredEvents, setFilteredEvents] = useState([]);
-  const [joinedEvent, setJoinedEvent] = useState('');
   const [userDetails, setUserDetails] = React.useState([]);
   const [showLoading, setShowLoading] = React.useState(false);
   const [selectedJoinEvent, setSelectedJoinEvent] = useState('');
@@ -187,11 +189,12 @@ function FilteredCardList() {
             <Typography variant="h5" align="center">No Events Organized On This Day</Typography>
           ) : (
             <Grid container spacing={2}>
-              {filteredEvents.map((item, index) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+              {filteredEvents.map((item, index) => {
+                        if (ABmode && item.isPrivate == false) return (<React.Fragment key={index}></React.Fragment>);
+                return (<Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                   <ItemCardJoin title={item.eventName} venue={item.venue} date={new Date(item.date).toISOString().split('T')[0]} slots={item.slotsRemaining} eventId={item.eventId} selectedEvent={setSelectedJoinEvent} sport={item.sport} />
-                </Grid>
-              ))}
+                </Grid>);
+              })}
             </Grid>
           )}
           <br />

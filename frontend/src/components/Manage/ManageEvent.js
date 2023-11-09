@@ -87,26 +87,16 @@ const ManageEvent = () => {
       url: `https://sportssync-backend.onrender.com/event?eventId=${eventId}`,
       headers: {},
       data: {
+        attendees: {
+          op: 'add',
+          list: [attendeeName],
+        },
         requestedAttendees: {
           op: 'remove',
           list: [attendeeName],
         },
       },
-    })
-
-    axios({
-        method: 'post',
-        url: `https://sportssync-backend.onrender.com/event?eventId=${eventId}`,
-        headers: {},
-        data: {
-          attendees: {
-            op: 'add',
-            list: [attendeeName],
-          },
-        },
-      })
-
-      .then((response) => {
+    }).then((response) => {
         // Handle success if needed
         console.log('Attendee added successfully:', attendeeName);
         handleRefresh();

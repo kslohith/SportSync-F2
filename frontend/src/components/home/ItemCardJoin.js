@@ -9,11 +9,11 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import SportsIcon from './SportsIcon';
 
-function ItemCardJoin({ title, venue, date, time, slots, eventId, selectedEvent, sport}) {
+function ItemCardJoin(props) {
 
   const handleClick = () => {
-    console.log("Selected", eventId);
-    selectedEvent(eventId);
+    console.log("Selected", props.cardItem.eventId);
+    props.selectedEvent(props.cardItem);
   }
   return (
     <Card variant="outlined">
@@ -21,20 +21,20 @@ function ItemCardJoin({ title, venue, date, time, slots, eventId, selectedEvent,
         <Grid container spacing={2}>
           <Grid container item xs={6} spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="body1" fontWeight="bold" style={{ textTransform: 'uppercase', fontSize: '14px' }}>{title}</Typography>
+              <Typography variant="body1" fontWeight="bold" style={{ textTransform: 'uppercase', fontSize: '14px' }}>{props.cardItem.eventName}</Typography>
             </Grid>
             <Grid container xs={12} style={{marginLeft: '10px'}}>
               <Grid item xs={2}>
                 <LocationOnIcon />
               </Grid>
               <Grid item xs={10}>
-                <Typography variant="body1">{venue}</Typography>
+                <Typography variant="body1">{props.cardItem.venue}</Typography>
               </Grid>
             </Grid>
             <Grid container xs={12} style={{ marginLeft: '10px'}}>
-            <Grid item xs={2}><SportsIcon sport={sport} /></Grid>
+            <Grid item xs={2}><SportsIcon sport={props.cardItem.sport} /></Grid>
             <Grid item xs={9} style={{marginLeft: '4px'}}>
-              <Typography variant="body1">{sport}</Typography>
+              <Typography variant="body1">{props.cardItem.sport}</Typography>
             </Grid>
           </Grid>
           </Grid>
@@ -43,8 +43,8 @@ function ItemCardJoin({ title, venue, date, time, slots, eventId, selectedEvent,
             <DateRangeIcon/>
             </Grid>
             <Grid item xs={8}>
-            <Typography variant="body1" style={{ color: 'grey', fontSize: '13px', marginLeft: '4px'}}>{date}</Typography>
-            <Typography variant="body1" style={{ color: 'grey', fontSize: '13px', marginLeft: '4px'}}>{time}</Typography>
+            <Typography variant="body1" style={{ color: 'grey', fontSize: '13px', marginLeft: '4px'}}>{new Date(props.cardItem.date).toISOString().split('T')[0]}</Typography>
+            <Typography variant="body1" style={{ color: 'grey', fontSize: '13px', marginLeft: '4px'}}>{new Date(props.cardItem.date).toISOString().split('T')[1].split('.')[0]}</Typography>
             </Grid>
         </Grid>
           <Grid container xs={12} style={{marginLeft: '14px'}}>
@@ -52,7 +52,7 @@ function ItemCardJoin({ title, venue, date, time, slots, eventId, selectedEvent,
               <ConfirmationNumberIcon />
             </Grid>
             <Grid item xs={10}>
-              <Typography variant="body1">Slots Remaining: {slots} </Typography>
+              <Typography variant="body1">Slots Remaining: {props.cardItem.slotsRemaining} </Typography>
             </Grid>
           </Grid>
           <Grid container item xs={12} justifyContent="flex-end">

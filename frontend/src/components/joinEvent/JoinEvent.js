@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, Grid, Typography, Container, Box, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import {Grid, Typography, Container, Box, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import Datepicker from '../createEvent/Datepicker';
 import axios from "axios";
 import ItemCardJoin from '../home/ItemCardJoin';
@@ -55,18 +55,18 @@ const getFormattedDate = (inputDate) => {
 
 function FilteredCardList() {
   const [ABmode, setABmode] = useOutletContext();
-  const [joinedEvent, setJoinedEvent] = useState('');
+  //const [joinedEvent, setJoinedEvent] = useState('');
   const [selectedSport, setSelectedSport] = useState('');
   const [selectedDate, setSelectedDate] = useState(null);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [userDetails, setUserDetails] = React.useState([]);
   const [showLoading, setShowLoading] = React.useState(false);
-  const [selectedJoinEvent, setSelectedJoinEvent] = useState('');
+  const [selectedJoinEvent, setSelectedJoinEvent] = useState(null);
   const [alertOpen, setAlertOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
 
   const handleClose = () => {
-    setSelectedJoinEvent('');
+    setSelectedJoinEvent(null);
     setShowPopup(false);
   };
 
@@ -80,9 +80,10 @@ function FilteredCardList() {
           setUserDetails(response.data.data);
           // Filter events based on selected sport and date
           const filteredEvents = response.data.data.filter((item) => {
+            const registeredEvent = (item.attendees.includes(userName) || item.requestedAttendees.includes(userName));
             const sportMatches = selectedSport === '' || item.sport === selectedSport;
             const dateMatches = !selectedDate || getFormattedDate(new Date(item.date)) === selectedDate?.split('T')[0];
-            return sportMatches && dateMatches;
+            return !registeredEvent && sportMatches && dateMatches;
           });
           setFilteredEvents(filteredEvents);
         })
@@ -101,10 +102,10 @@ function FilteredCardList() {
     setSelectedDate(date);
   };
 
-  const getEventDetails = () => {
+  /*const getEventDetails = () => {
     const filteredData = userDetails.filter(item => item.eventId === selectedJoinEvent);
     setJoinedEvent(filteredData);
-  }
+  }*/
 
   useEffect(() => {
     const userName = getCookieValue('user_id');
@@ -115,8 +116,8 @@ function FilteredCardList() {
       firebase_screen: 'join_event', 
       firebase_screen_class: 'join_event'
     });
-    if (selectedJoinEvent.length > 0) {
-      getEventDetails();
+    if (selectedJoinEvent != null) {
+      console.log(selectedJoinEvent);
       setShowPopup(true);
     }
   }, [selectedJoinEvent]);
@@ -126,11 +127,30 @@ function FilteredCardList() {
     logEvent(analytics, 'user_joined_event', {
       user_email: { userName }
     });
-    if (eventId?.length > 0) {
-      joinedEvent[0]?.requestedAttendees.push(getCookieValue('user_id'));
+    if (selectedJoinEvent?.eventId?.length > 0) {
+      //joinedEvent[0]?.requestedAttendees.push(getCookieValue('user_id'));
       setShowLoading(true);
-      axios.post(`https://sportssync-backend.onrender.com/event`, joinedEvent[0], {
-        params: { eventId: selectedJoinEvent }
+      let addData = {};
+      if (selectedJoinEvent.isPrivate) {
+        addData = {
+          requestedAttendees: {
+            op: 'add',
+            list: [getCookieValue('user_id')]
+          }
+        }
+      } else {
+        addData = {
+          attendees: {
+            op: 'add',
+            list: [getCookieValue('user_id')]
+          }
+        }
+      }
+      axios({
+        method:'post',
+        url: `https://sportssync-backend.onrender.com/event?eventId=${selectedJoinEvent.eventId}`, 
+        headers: {},
+        data: addData
       })
       .then((response) => {
         setShowLoading(false);
@@ -192,7 +212,7 @@ function FilteredCardList() {
               {filteredEvents.map((item, index) => {
                         if (ABmode && item.isPrivate == false) return (<React.Fragment key={index}></React.Fragment>);
                 return (<Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                  <ItemCardJoin title={item.eventName} venue={item.venue} date={new Date(item.date).toISOString().split('T')[0]} slots={item.slotsRemaining} eventId={item.eventId} selectedEvent={setSelectedJoinEvent} sport={item.sport} />
+                  <ItemCardJoin cardItem={item} selectedEvent={setSelectedJoinEvent}/>
                 </Grid>);
               })}
             </Grid>
@@ -209,7 +229,7 @@ function FilteredCardList() {
           open={showPopup}
         >
           <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-            {joinedEvent[0]?.eventName}
+            {selectedJoinEvent?.eventName}
           </DialogTitle>
           <IconButton
             aria-label="close"
@@ -225,17 +245,17 @@ function FilteredCardList() {
           </IconButton>
           <DialogContent dividers>
             <Typography gutterBottom>
-              Sport: {joinedEvent[0]?.sport}
+              Sport: {selectedJoinEvent?.sport}
             </Typography>
             <Typography gutterBottom>
-              Venue: {joinedEvent[0]?.venue}
+              Venue: {selectedJoinEvent?.venue}
             </Typography>
             <Typography gutterBottom>
-              Slots Remaining: {joinedEvent[0]?.slotsRemaining}
+              Slots Remaining: {selectedJoinEvent?.slotsRemaining}
             </Typography>
           </DialogContent>
           <DialogActions>
-            <Button autoFocus onClick={() => {handleJoinEvent(joinedEvent[0]?.eventId)}}>
+            <Button autoFocus onClick={() => {handleJoinEvent(selectedJoinEvent?.eventId)}}>
               Request to Join
             </Button>
           </DialogActions>

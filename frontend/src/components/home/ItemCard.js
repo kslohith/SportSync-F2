@@ -11,6 +11,19 @@ import { useNavigate } from 'react-router-dom';
 import { ManageEventModal } from '../Manage/MangeEventModal';
 import SportsIcon from './SportsIcon';
 
+const userName = getCookieValue('user_id');
+
+function getCookieValue(key) {
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim();
+    if (cookie.startsWith(key + '=')) {
+      return decodeURIComponent(cookie.substring(key.length + 1));
+    }
+  }
+  return null;
+}
+
 const ItemCard = (props) => {
   const [cardItem, setCardItem] = useState(props.cardItem);
   const [openModal, setOpenModal] = useState(false);
@@ -31,7 +44,7 @@ const ItemCard = (props) => {
   return (
   <React.Fragment>
   {openModal && <ManageEventModal cardItem={cardItem} openModal={openModal} setOpenModal={setOpenModal} setCardItem={setCardItem}/>}
-  <Card variant="outlined" style={{ width: '315px', height: '180px' }}>
+  <Card variant="outlined" style={{ width: '100%', height: '180px' }}>
     <CardContent>
       <Grid container spacing={2}>
         <Grid container item xs={6} spacing={2}>
@@ -61,17 +74,14 @@ const ItemCard = (props) => {
             </Grid>
         </Grid>
 
-        <Grid container item xs={12} justifyContent="flex-end">
+        {userName === cardItem.organizer && <Grid container item xs={12} justifyContent="flex-end">
           <Button variant="contained" color="primary" onClick={handleAttendeesClick}>
             Manage Attendees
           </Button>
-        </Grid>
-
-        <Grid container item xs={12} justifyContent="flex-end">
-          <Button variant="contained" color="primary" onClick={handleManageClick}>
+          <Button sx={{marginLeft:'10px'}} variant="contained" color="primary" onClick={handleManageClick}>
             Edit
           </Button>
-        </Grid>
+        </Grid>}
       </Grid>
     </CardContent>
   </Card>

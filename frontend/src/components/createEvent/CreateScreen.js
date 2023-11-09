@@ -8,7 +8,7 @@ import SportsDropdown from './SportsDropdown';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Datepicker from './Datepicker';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutlet, useOutletContext } from 'react-router-dom';
 import CardContent from '@mui/material/CardContent';
 import Card from '@mui/material/Card';
 import { logEvent } from "firebase/analytics";
@@ -21,6 +21,8 @@ const skillLevels = [
 ]
 
 const CreateScreen = () => {
+  const [ABmode, setABmode] = useOutletContext();
+
   const [eventName, setEventName] = useState('');
   const [capacity, setCapacity] = useState('1');
   const [location, setLocation] = useState('');
@@ -35,7 +37,7 @@ const CreateScreen = () => {
   const userId = getCookieValue('user_id');
   const navigate = useNavigate();
   
-  const ABmode = 0; 
+  
 
   function getCookieValue(key) {
     const cookies = document.cookie.split(';');
@@ -84,7 +86,7 @@ const CreateScreen = () => {
         venue: location,
         date: date,
         slotsRemaining: cap - 1,
-        isPrivate: request,
+        isPrivate: (ABmode)?true:request,
         capacity: cap,
         attendees: [userId],
         dateOfCreation: new Date(),
@@ -110,8 +112,9 @@ const CreateScreen = () => {
   const setEventDate = (selectedDate) => {
     setDate(selectedDate);
   }
-
+  
   return (
+    <React.Fragment>
     <Card variant="outlined">
     <CardContent>
       <Grid container spacing={2}>
@@ -166,7 +169,7 @@ const CreateScreen = () => {
             value={skill}
             onChange={(e)=>setSkill(e.target.value)}
           >
-            {skillLevels[ABmode].map((item, index)=>(
+            {skillLevels[(ABmode)?1:0].map((item, index)=>(
               <MenuItem key={index} value={index}>{item}</MenuItem>
             ))}
           </Select>
@@ -183,15 +186,15 @@ const CreateScreen = () => {
           />
         </Grid>
 
-        <Grid item xs={12}>
+        {!ABmode && <Grid item xs={12}>
         <FormGroup>
             <FormControlLabel  control={<Switch
             checked={privateEvent}
             onChange={handlePrivateEventChange}
             inputProps={{ 'aria-label': 'controlled' }}
-          />} label="Private Event" />
+          />} label="Request to Join" />
         </FormGroup>
-        </Grid>
+        </Grid>}
 
         <Grid item xs={12}>
           <Button variant="contained" onClick={createEvent}>Create Event</Button>
@@ -199,6 +202,8 @@ const CreateScreen = () => {
       </Grid>
     </CardContent>
     </Card>
+    <Button variant="contained" sx={{marginTop:'30px', padding:'3px', bgcolor:'purple'}} onClick={()=>setABmode(!ABmode)}>For Dev use only!</Button>
+    </React.Fragment>
   );
 }
 

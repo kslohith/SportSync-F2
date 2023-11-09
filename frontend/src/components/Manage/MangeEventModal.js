@@ -27,6 +27,7 @@ export function ManageEventModal(props) {
         props.setCardItem((item) => {
           item.eventName = eventName;
           item.capacity = capacity; 
+          item.slotsRemaining = capacity - item.attendees.length; 
           item.venue = location;
           item.sport = sport; 
           item.date = date; 
@@ -39,6 +40,7 @@ export function ManageEventModal(props) {
           data: {
             eventName: eventName,
             capacity: capacity,
+            slotsRemaining: capacity - props.cardItem.attendees.length, 
             location: location,
             sport: sport
           }

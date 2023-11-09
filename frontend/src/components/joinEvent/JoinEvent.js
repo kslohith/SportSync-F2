@@ -16,6 +16,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { logEvent } from "firebase/analytics";
 import analytics from "../../config/firebaseConfig";
+import { useOutletContext } from 'react-router-dom';
 
 const sportsData = ['Football', 'Basketball', 'Tennis', 'Cricket', 'Baseball'];
 
@@ -45,6 +46,7 @@ function getCookieValue(key) {
 }
 
 function FilteredCardList() {
+  const [ABmode, setABmode] = useOutletContext();
   const [joinedEvent, setJoinedEvent] = useState('');
   const [selectedSport, setSelectedSport] = useState('');
   const [selectedDateRange, setSelectedDateRange] = useState([null, null]);
@@ -171,11 +173,12 @@ function FilteredCardList() {
       {!showLoading && 
                 <>
                 <Grid container spacing={2}>
-                    {userDetails.map((item, index) => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                    {userDetails.map((item, index) => {
+                        if (ABmode && item.isPrivate == false) return (<React.Fragment key={index}></React.Fragment>);
+                        return (<Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                             <ItemCardJoin title={item.eventName} venue={item.venue} date={new Date(item.date).toISOString().split('T')[0]} time={new Date(item.date).toISOString().split('T')[1].split('.')[0]} slots={item.slotsRemaining} eventId={item.eventId} selectedEvent={setSelectedJoinEvent} />
-                        </Grid>
-                    ))}
+                        </Grid>);
+                    })}
                 </Grid>
                 <br></br>
                 <br></br>

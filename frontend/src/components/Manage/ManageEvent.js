@@ -98,35 +98,23 @@ const ManageEvent = () => {
           url: `https://sportssync-backend.onrender.com/event?eventId=${eventId}`,
           headers: {},
           data: {
+            attendees: {
+              op: 'add',
+              list: [attendeeName],
+            },
             requestedAttendees: {
               op: 'remove',
               list: [attendeeName],
             },
           },
-        })
-
-        axios({
-            method: 'post',
-            url: `https://sportssync-backend.onrender.com/event?eventId=${eventId}`,
-            headers: {},
-            data: {
-              attendees: {
-                op: 'add',
-                list: [attendeeName],
-              },
-            },
-          })
-
-          .then((response) => {
+        }).then((response) => {
             // Handle success if needed
             console.log('Attendee added successfully:', attendeeName);
             handleRefresh();
-          })
-          .catch((error) => {
+        }).catch((error) => {
             // Handle error if needed
             console.error('Error adding attendee:', attendeeName, error);
-          });
-          
+        });   
       };
 
     
@@ -144,36 +132,6 @@ const ManageEvent = () => {
           {showLoading && <Box sx={{ display: 'flex' }}>
             <CircularProgress />
           </Box>}
-          <Typography variant="h7" gutterBottom paragraph>
-                Event Name: {attendeeDetails.eventName}
-          </Typography>
-
-          <Typography variant="h7" gutterBottom paragraph>
-                Sport: {attendeeDetails.sport}
-          </Typography>
-
-          <Typography variant="h7" gutterBottom paragraph>
-                Capacity: {attendeeDetails.capacity}
-          </Typography>
-
-          <Typography variant="h7" gutterBottom paragraph>
-                Start Time: {attendeeDetails.date}
-          </Typography>
-
-          <Typography variant="h7" gutterBottom paragraph>
-                Location: {attendeeDetails.venue}
-          </Typography>
-
-          <Typography variant="h7" gutterBottom paragraph>
-                Private: {attendeeDetails.isPrivate}
-          </Typography>
-
-
-          <Grid container item justifyContent="right">
-            <button onClick={handleRefresh}>
-              Edit
-            </button>
-          </Grid>
           {!showLoading && attendeeDetails.attendees && (
             <Grid container spacing={2}>
               {true && (

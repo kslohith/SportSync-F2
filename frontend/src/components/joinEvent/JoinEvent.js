@@ -18,7 +18,7 @@ import { logEvent } from "firebase/analytics";
 import analytics from "../../config/firebaseConfig";
 import { useOutletContext } from 'react-router-dom';
 
-const sportsData = ['Football', 'Basketball', 'Tennis', 'Cricket', 'Baseball', 'Badminton', 'Squash', 'Golf'];
+const sportsData = ['Football', 'Basketball', 'Tennis', 'Cricket', 'Baseball', 'Badminton', 'Squash', 'Golf', 'Fencing'];
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -82,7 +82,7 @@ function FilteredCardList() {
           const filteredEvents = response.data.data.filter((item) => {
             const registeredEvent = (item.attendees.includes(userName) || item.requestedAttendees.includes(userName));
             const sportMatches = selectedSport === '' || item.sport === selectedSport;
-            const dateMatches = !selectedDate || getFormattedDate(new Date(item.date)) === selectedDate?.split('T')[0];
+            const dateMatches = (selectedDate===null) || getFormattedDate(new Date(item.date)) === selectedDate?.split('T')[0];
             return !registeredEvent && sportMatches && dateMatches;
           });
           setFilteredEvents(filteredEvents);

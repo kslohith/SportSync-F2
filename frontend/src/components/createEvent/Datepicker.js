@@ -2,7 +2,7 @@ import React from 'react'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 
 const Datepicker = (props) => {
   const [selectedDate, setSelectedDate] = React.useState(null);
@@ -13,7 +13,7 @@ const Datepicker = (props) => {
   }
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DateTimePicker 
+        <MobileDateTimePicker 
           label="Game Start Time" 
           value={dayjs(props.date)}
           onChange={(newValue) => {handleDateChange(newValue)}} 

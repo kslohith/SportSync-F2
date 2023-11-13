@@ -86,7 +86,7 @@ const CreateScreen = () => {
         venue: location,
         date: date,
         slotsRemaining: cap - 1,
-        isPrivate: (ABmode)?true:request,
+        isPrivate: privateEvent,
         capacity: cap,
         attendees: [userId],
         dateOfCreation: new Date(),

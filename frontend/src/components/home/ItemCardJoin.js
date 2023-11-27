@@ -56,9 +56,15 @@ function ItemCardJoin(props) {
             </Grid>
           </Grid>
           <Grid container item xs={12} justifyContent="flex-end">
-            <Button variant="contained" color="primary" onClick={handleClick}>
-              Join
-            </Button>
+          {props.cardItem.slotsRemaining > 0 ? (
+              <Button variant="contained" color="primary" onClick={handleClick}>
+                Join
+              </Button>
+            ) : (
+              <Button variant="contained" color="primary" disabled>
+                FULL
+              </Button>
+            )}
           </Grid>
         </Grid>
       </CardContent>

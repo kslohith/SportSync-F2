@@ -17,9 +17,9 @@ const RequesteeBox = ({ attendeeName, onDenyClick, onAcceptClick }) => {
   }
 
   return (
-    <Card variant="outlined" style={{ minWidth: 275, margin: '16px', padding: '8px' }}>
+    <Card variant="outlined" style={{ minWidth: 275, margin: '1px', padding: '8px' }}>
       <CardContent>
-        <Typography variant="h6">{attendeeName}</Typography>
+        <Typography variant="body1">{attendeeName}</Typography>
       </CardContent>
       <CardActions>
         <Grid container justifyContent="space-between">

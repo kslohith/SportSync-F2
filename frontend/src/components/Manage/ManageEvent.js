@@ -1,5 +1,5 @@
-import { Button, CircularProgress, Container, Grid, Card, CardContent, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { Button, CircularProgress, Container, Grid, Card, CardContent, Typography, Tab, Tabs } from "@mui/material";
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
 import AttendeeBox from "./AttendeeBox";
@@ -8,6 +8,7 @@ import RequesteeBox from "./RequesteeBox";
 const ManageEvent = () => {
   const [attendeeDetails, setAttendeeDetails] = useState([]);
   const [showLoading, setShowLoading] = useState(true);
+  const [currentTab, setCurrentTab] = useState(0); // 0 for Requests, 1 for Attendees
   const { eventId } = useParams();
 
   const fetchData = () => {
@@ -33,79 +34,23 @@ const ManageEvent = () => {
 
   const removeAttendee = (attendeeName) => {
     // Your remove attendee logic
-    axios({
-      method: 'post',
-      url: `https://sportssync-backend.onrender.com/event?eventId=${eventId}`,
-      headers: {},
-      data: {
-        attendees: {
-          op: 'remove',
-          list: [attendeeName],
-        },
-      },
-    })
-      .then((response) => {
-        // Handle success if needed
-        console.log('Attendee removed successfully:', attendeeName);
-        handleRefresh();
-      })
-      .catch((error) => {
-        // Handle error if needed
-        console.error('Error removing attendee:', attendeeName, error);
-      });
-      
+    // ...
+
+    handleRefresh();
   };
 
   const denyAttendee = (attendeeName) => {
     // Your deny attendee logic
-    axios({
-      method: 'post',
-      url: `https://sportssync-backend.onrender.com/event?eventId=${eventId}`,
-      headers: {},
-      data: {
-        requestedAttendees: {
-          op: 'remove',
-          list: [attendeeName],
-        },
-      },
-    })
-      .then((response) => {
-        // Handle success if needed
-        console.log('Attendee denied successfully:', attendeeName);
-        handleRefresh();
-      })
-      .catch((error) => {
-        // Handle error if needed
-        console.error('Error denying attendee:', attendeeName, error);
-      });
+    // ...
+
+    handleRefresh();
   };
 
   const acceptAttendee = (attendeeName) => {
     // Your accept attendee logic
-    axios({
-      method: 'post',
-      url: `https://sportssync-backend.onrender.com/event?eventId=${eventId}`,
-      headers: {},
-      data: {
-        attendees: {
-          op: 'add',
-          list: [attendeeName],
-        },
-        requestedAttendees: {
-          op: 'remove',
-          list: [attendeeName],
-        },
-      },
-    }).then((response) => {
-        // Handle success if needed
-        console.log('Attendee added successfully:', attendeeName);
-        handleRefresh();
-      })
-      .catch((error) => {
-        // Handle error if needed
-        console.error('Error adding attendee:', attendeeName, error);
-      });
-      
+    // ...
+
+    handleRefresh();
   };
 
   const navigate = useNavigate();
@@ -120,7 +65,14 @@ const ManageEvent = () => {
 
       {!showLoading && (
         <Grid container spacing={3}>
-          {attendeeDetails.requestedAttendees.length > 0 && (
+          <Grid item xs={12}>
+            <Tabs value={currentTab} onChange={(event, newValue) => setCurrentTab(newValue)}>
+              <Tab label="Requests" />
+              <Tab label="Attendees" />
+            </Tabs>
+          </Grid>
+
+          {currentTab === 0 && attendeeDetails.requestedAttendees.length > 0 && (
             <Grid item xs={12}>
               <Card variant="outlined">
                 <CardContent>
@@ -130,13 +82,13 @@ const ManageEvent = () => {
             </Grid>
           )}
 
-          {attendeeDetails.requestedAttendees.map((item, index) => (
+          {currentTab === 0 && attendeeDetails.requestedAttendees.map((item, index) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
               <RequesteeBox attendeeName={item} onDenyClick={() => denyAttendee(item)} onAcceptClick={() => acceptAttendee(item)} />
             </Grid>
           ))}
 
-          {attendeeDetails.requestedAttendees.length === 0 && (
+          {currentTab === 0 && attendeeDetails.requestedAttendees.length === 0 && (
             <Grid item xs={12}>
               <Typography variant="body2" align="center" style={{ fontStyle: 'italic' }}>
                 No pending requests
@@ -144,15 +96,17 @@ const ManageEvent = () => {
             </Grid>
           )}
 
-          <Grid item xs={12}>
-            <Card variant="outlined">
-              <CardContent>
-                <Typography variant="h6">Attendees</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+          {currentTab === 1 && (
+            <Grid item xs={12}>
+              <Card variant="outlined">
+                <CardContent>
+                  <Typography variant="h6">Attendees</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          )}
 
-          {attendeeDetails.attendees.map((item, index) => (
+          {currentTab === 1 && attendeeDetails.attendees.map((item, index) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
               <AttendeeBox attendeeName={item} onRemoveClick={() => removeAttendee(item)} />
             </Grid>

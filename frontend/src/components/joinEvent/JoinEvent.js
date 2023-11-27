@@ -62,6 +62,7 @@ function FilteredCardList() {
   const [userDetails, setUserDetails] = React.useState([]);
   const [showLoading, setShowLoading] = React.useState(false);
   const [selectedJoinEvent, setSelectedJoinEvent] = useState(null);
+  const [action, setAction] = useState(0); //0 - join/request, 1 - leave, 2 - unrequest
   const [alertOpen, setAlertOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
 
@@ -122,6 +123,14 @@ function FilteredCardList() {
     }
   }, [selectedJoinEvent]);
 
+  const handleAction = (eventId) => {
+    //if (action == 0) {
+      handleJoinEvent(eventId);
+    //} else {
+      //handleLeaveEvent(eventId);
+    //}
+  }
+
   const handleJoinEvent = (eventId) => {
     const userName = getCookieValue('user_id');
     logEvent(analytics, 'user_joined_event', {
@@ -142,6 +151,50 @@ function FilteredCardList() {
         addData = {
           attendees: {
             op: 'add',
+            list: [getCookieValue('user_id')]
+          }
+        }
+      }
+      axios({
+        method:'post',
+        url: `https://sportssync-backend.onrender.com/event?eventId=${selectedJoinEvent.eventId}`, 
+        headers: {},
+        data: addData
+      })
+      .then((response) => {
+        setShowLoading(false);
+        setShowPopup(false);
+        setAlertOpen(true);
+      })
+      .catch((error) => {
+        setShowLoading(false);
+        console.log(error);
+        setShowPopup(false);
+      });
+    }
+  }
+
+
+  const handleLeaveEvent = (eventId) => {
+    const userName = getCookieValue('user_id');
+    logEvent(analytics, 'user_joined_event', {
+      user_email: { userName }
+    });
+    if (selectedJoinEvent?.eventId?.length > 0) {
+      //joinedEvent[0]?.requestedAttendees.push(getCookieValue('user_id'));
+      setShowLoading(true);
+      let addData = {};
+      if (action == 2) {
+        addData = {
+          requestedAttendees: {
+            op: 'remove',
+            list: [getCookieValue('user_id')]
+          }
+        }
+      } else {
+        addData = {
+          attendees: {
+            op: 'remove',
             list: [getCookieValue('user_id')]
           }
         }
@@ -212,7 +265,7 @@ function FilteredCardList() {
               {filteredEvents.map((item, index) => {
                         if (ABmode && item.isPrivate == false) return (<React.Fragment key={index}></React.Fragment>);
                 return (<Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                  <ItemCardJoin cardItem={item} selectedEvent={setSelectedJoinEvent}/>
+                  <ItemCardJoin cardItem={item} selectedEvent={setSelectedJoinEvent} setAction={setAction}/>
                 </Grid>);
               })}
             </Grid>
@@ -256,14 +309,17 @@ function FilteredCardList() {
           </DialogContent>
           <DialogActions>
             <Button autoFocus onClick={() => {handleJoinEvent(selectedJoinEvent?.eventId)}}>
-              Request to Join
+              {(selectedJoinEvent?.isPrivate) ? "Request to Join" : "Join"}
             </Button>
           </DialogActions>
         </BootstrapDialog>
       </React.Fragment>
       <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>
         <Alert onClose={handleAlertClose} severity="success" sx={{ width: '100%' }}>
-          Successfully Sent Request to Join the game !
+          {(action == 0) ? 
+            ((selectedJoinEvent?.isPrivate) ? "Successfully sent Request to Join the game!"
+              : "Successfully joined the game!")
+            : "Succesfully left game!"}
         </Alert>
       </Snackbar>
     </Container>

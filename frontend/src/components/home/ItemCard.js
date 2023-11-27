@@ -10,7 +10,13 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 import { useNavigate } from 'react-router-dom';
 import { ManageEventModal } from '../Manage/MangeEventModal';
 import SportsIcon from './SportsIcon';
+import { Box } from '@mui/material';
+import Modal from '@mui/material/Modal'
 
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+import axios from 'axios';
 
 function getCookieValue(key) {
   const cookies = document.cookie.split(';');
@@ -23,9 +29,28 @@ function getCookieValue(key) {
   return null;
 }
 
+const boxstyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  overflow:'scroll',
+  bgcolor: 'white',
+  border: '2px solid #000',
+  padding: '15px',
+  borderRadius: '2%'
+};
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 const ItemCard = (props) => {
   const [cardItem, setCardItem] = useState(props.cardItem);
   const [openModal, setOpenModal] = useState(false);
+  const [showLeave, setShowLeave] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [removed, setRemoved] = useState(false);
   const navigate = useNavigate();
   const userName = getCookieValue('user_id');
 
@@ -40,10 +65,50 @@ const ItemCard = (props) => {
     setOpenModal(true);
   };
 
+  const handleLeaveClick = () => {
+    setShowLeave(true);
+  }
+  const handleLeave = (leave) => {
+    if (leave) {
+      axios({
+        method:'post',
+        url: `https://sportssync-backend.onrender.com/event?eventId=${cardItem.eventId}`, 
+        headers: {},
+        data: {
+          attendees: {
+            op: 'remove',
+            list: [userName]
+          }
+        }
+      })
+      .then((response) => {
+        setShowLeave(false);
+        setAlertOpen(true);
+        setRemoved(true);
+      })
+      .catch((error) => {
+        setShowLeave(false);
+      });
+    } else {
+      setShowLeave(false);
+    }
+  }
+
   return (
   <React.Fragment>
   {openModal && <ManageEventModal cardItem={cardItem} openModal={openModal} setOpenModal={setOpenModal} setCardItem={setCardItem}/>}
-  <Card variant="outlined" style={{ width: '100%', height: '180px' }}>
+  {showLeave && 
+    <Modal open={showLeave} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+      <Box sx={boxstyle}>
+        <Grid container spacing={2}>
+          <Grid item><Typography>Are you sure you want to leave?</Typography></Grid>
+          <Grid item><Button variant="contained" color="secondary" onClick={()=>handleLeave(true)}>Leave</Button></Grid>
+          <Grid item><Button color="primary" onClick={()=>handleLeave(false)}>Cancel</Button></Grid>
+        </Grid>
+      </Box>
+    </Modal>
+  }
+  {!removed && <Card variant="outlined" style={{ width: '100%', height: '180px' }}>
     <CardContent>
       <Grid container spacing={2}>
         <Grid container item xs={6} spacing={2}>
@@ -73,17 +138,28 @@ const ItemCard = (props) => {
             </Grid>
         </Grid>
 
-        {userName === cardItem.organizer && <Grid container item xs={12} justifyContent="flex-end">
+        {(userName === cardItem.organizer) ? <Grid container item xs={12} justifyContent="flex-end">
           <Button variant="contained" color="primary" onClick={handleAttendeesClick}>
-            Manage Attendees
+            Manage 
           </Button>
           <Button sx={{marginLeft:'10px'}} variant="contained" color="primary" onClick={handleManageClick}>
             Edit
           </Button>
+        </Grid> : <Grid container item xs={12} justifyContent="flex-end">
+          <Button sx={{marginLeft:'10px'}} variant="contained" color="secondary" onClick={handleLeaveClick}>
+            Leave
+          </Button>
         </Grid>}
       </Grid>
     </CardContent>
-  </Card>
+  </Card>}
+
+  <Snackbar open={alertOpen} autoHideDuration={6000} onClose={()=>setAlertOpen(false)}>
+        <Alert onClose={()=>setAlertOpen(false)} severity="success" sx={{ width: '100%' }}>
+          Succesfully left event
+        </Alert>
+  </Snackbar>
+
   </React.Fragment>
   );
 };

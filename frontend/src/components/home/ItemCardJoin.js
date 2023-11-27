@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
@@ -9,12 +9,41 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import SportsIcon from './SportsIcon';
 
+function getCookieValue(key) {
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim();
+    if (cookie.startsWith(key + '=')) {
+      return decodeURIComponent(cookie.substring(key.length + 1));
+    }
+  }
+  return null;
+}
+
 function ItemCardJoin(props) {
 
+  const userName = getCookieValue('user_id');
+  var text = "Join";
+  var bcolor = "secondary";
+  var joinable = true; 
   const handleClick = () => {
     console.log("Selected", props.cardItem.eventId);
+    // if (bcolor === 'primary') {
+    //   props.setAction(0);
+    // } else {
+    //   if (text === 'Leave') props.setAction(1);
+    //   else props.setAction(2);
+    // }
     props.selectedEvent(props.cardItem);
   }
+  
+  if (props.cardItem.slotsRemaining <= 0) {
+    joinable = false; 
+  } else {
+    bcolor = "primary";
+    text = (props.cardItem.isPrivate) ? "Request" : "Join";
+  }
+
   return (
     <Card variant="outlined">
       <CardContent>
@@ -56,9 +85,9 @@ function ItemCardJoin(props) {
             </Grid>
           </Grid>
           <Grid container item xs={12} justifyContent="flex-end">
-          {props.cardItem.slotsRemaining > 0 ? (
-              <Button variant="contained" color="primary" onClick={handleClick}>
-                Join
+          {joinable ? (
+              <Button variant="contained" color={bcolor} onClick={handleClick}>
+                {text}
               </Button>
             ) : (
               <Button variant="contained" color="primary" disabled>

@@ -62,7 +62,7 @@ const Home = () => {
     const [showLoading, setShowLoading] = React.useState(false);
     const [value, setValue] = React.useState(0);
     const [upcomingGame, setUpcomingGame] = React.useState([]);
-
+    const [requests, setRequests] = React.useState([]);
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -94,6 +94,18 @@ const Home = () => {
                 .then((response) => {
                     setShowLoading(false);
                     setUpcomingGame(response.data.data); 
+                })
+                .catch((error) => {
+                    setShowLoading(false);
+                    console.log(error);
+                });
+            }
+            setShowLoading(true);
+            if (userName) {
+                axios.get(`https://sportssync-backend.onrender.com/getRequests?email=${userName}`)
+                .then((response) => {
+                    setShowLoading(false);
+                    setRequests(response.data.data); 
                 })
                 .catch((error) => {
                     setShowLoading(false);
@@ -134,7 +146,8 @@ const Home = () => {
                 <Box sx={{ borderBottom: 1, borderColor: 'divider', padding: '8px' }}>
                     <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
                     <Tab label="My Events" {...a11yProps(0)} />
-                    <Tab label="Upcoming Games" {...a11yProps(1)} />
+                    <Tab label="All" {...a11yProps(1)} />
+                    <Tab label="Requests" {...a11yProps(2)}/>
                     </Tabs>
                 </Box>
                 <CustomTabPanel value={value} index={0}>
@@ -150,7 +163,16 @@ const Home = () => {
                     <Grid container spacing={2}>
                         {upcomingGame.map((item, index) => (
                             <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                                <ItemCard cardItem={item}/>
+                                <ItemCard cardItem={item} ctype={1}/>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={2}>
+                    <Grid container spacing={2}>
+                        {requests.map((item, index) => (
+                            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                                <ItemCard cardItem={item} ctype={2}/>
                             </Grid>
                         ))}
                     </Grid>

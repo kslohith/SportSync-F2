@@ -68,6 +68,36 @@ const ItemCard = (props) => {
   const handleLeaveClick = () => {
     setShowLeave(true);
   }
+
+  const handleUnrequest = (leave) => {
+    if (leave) {
+      axios({
+        method:'post',
+        url: `https://sportssync-backend.onrender.com/event?eventId=${cardItem.eventId}`, 
+        headers: {},
+        data: {
+          requestedAttendees: {
+            op: 'remove',
+            list: [userName]
+          }
+        }
+      })
+      .then((response) => {
+        setShowLeave(false);
+        setAlertOpen(true);
+        setRemoved(true);
+        console.log(response);
+      })
+      .catch((error) => {
+        setShowLeave(false);
+        console.log(error);
+      });
+    } else {
+      setShowLeave(false);
+    }
+  }
+
+
   const handleLeave = (leave) => {
     if (leave) {
       axios({
@@ -102,8 +132,8 @@ const ItemCard = (props) => {
       <Box sx={boxstyle}>
         <Grid container spacing={2}>
           <Grid item><Typography>Are you sure you want to leave?</Typography></Grid>
-          <Grid item><Button variant="contained" color="secondary" onClick={()=>handleLeave(true)}>Leave</Button></Grid>
-          <Grid item><Button color="primary" onClick={()=>handleLeave(false)}>Cancel</Button></Grid>
+          <Grid item><Button variant="contained" color="secondary" onClick={()=>(props.ctype == 1) ? handleLeave(true) : handleUnrequest(true)}>Leave</Button></Grid>
+          <Grid item><Button color="primary" onClick={()=>(props.ctype == 1) ? handleLeave(false) : handleUnrequest(false)}>Cancel</Button></Grid>
         </Grid>
       </Box>
     </Modal>
@@ -147,7 +177,7 @@ const ItemCard = (props) => {
           </Button>
         </Grid> : <Grid container item xs={12} justifyContent="flex-end">
           <Button sx={{marginLeft:'10px'}} variant="contained" color="secondary" onClick={handleLeaveClick}>
-            Leave
+            {(props.ctype == 1) ? 'Leave' : 'Un-request'}
           </Button>
         </Grid>}
       </Grid>

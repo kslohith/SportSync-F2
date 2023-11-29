@@ -81,9 +81,10 @@ function FilteredCardList() {
           setUserDetails(response.data.data);
           // Filter events based on selected sport and date
           const filteredEvents = response.data.data.filter((item) => {
-            const registeredEvent = (item.attendees.includes(userName) || item.requestedAttendees.includes(userName));
+            const registeredEvent = ((item.attendees.length > 0 && item.attendees.includes(userName)) 
+              || (item.requestedAttendees.length > 0 && item.requestedAttendees.includes(userName)));
             const sportMatches = selectedSport === '' || item.sport === selectedSport;
-            const dateMatches = (selectedDate===null) || getFormattedDate(new Date(item.date)) === selectedDate?.split('T')[0];
+            const dateMatches = true || (selectedDate===null) || getFormattedDate(new Date(item.date)) === selectedDate?.split('T')[0];
             return !registeredEvent && sportMatches && dateMatches;
           });
           setFilteredEvents(filteredEvents);

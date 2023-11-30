@@ -77,7 +77,7 @@ function ItemCardJoin(props) {
             <DateRangeIcon/>
             </Grid>
             <Grid item xs={8}>
-            <Typography variant="body1" style={{ color: 'grey', fontSize: '13px', marginLeft: '4px'}}>{new Date(props.cardItem.date).toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}</Typography>
+            <Typography variant="body1" style={{ color: 'grey', fontSize: '13px', marginLeft: '4px'}}>{new Date(props.cardItem.date).toLocaleDateString()}</Typography>
             <Typography variant="body1" style={{ color: 'grey', fontSize: '13px', marginLeft: '4px'}}>{new Date(props.cardItem.date).toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}</Typography>
             </Grid>
         </Grid>

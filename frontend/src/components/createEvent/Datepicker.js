@@ -14,7 +14,7 @@ const Datepicker = (props) => {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
         <MobileDateTimePicker 
           label="Game Start Time" 
-          value={dayjs(props.date)}
+          value={(props.date != null) ? dayjs(props.date): null}
           onChange={(newValue) => {handleDateChange(newValue)}} 
         />
     </LocalizationProvider>

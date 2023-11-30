@@ -77,8 +77,8 @@ const CreateScreen = () => {
     }
   
     const adjustedDate = new Date(date);
-    const options = { timeZone: 'America/New_York', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
-    const dateString = adjustedDate.toLocaleString('en-US', options);
+    const options = { timeZone: 'America/New_York', hour12: false, year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+    const dateString = new Intl.DateTimeFormat('en-US', options).format(adjustedDate);
   
     axios({
       method: 'post',
@@ -112,6 +112,7 @@ const CreateScreen = () => {
         setDisableSave(false);
       });
   };
+  
 
   const setEventDate = (selectedDate) => {
     // Log the selected date
@@ -214,9 +215,6 @@ const CreateScreen = () => {
 
         <Grid item xs={12}>
           <Button variant="contained" onClick={createEvent}>Create Event</Button>
-          <button onClick={console.log(date)}>
-            Log Current Date
-        </button>
         </Grid>
       </Grid>
     </CardContent>

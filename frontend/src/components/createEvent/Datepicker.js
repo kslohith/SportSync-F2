@@ -7,9 +7,8 @@ import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 const Datepicker = (props) => {
   const [selectedDate, setSelectedDate] = React.useState(null);
   const handleDateChange = (dateSelected) => {
-    console.log(dateSelected.toISOString());
-    //setSelectedDate(value.toISOString());
-    props.setEventDate(dateSelected.toISOString());
+    const localDateString = dayjs(dateSelected).format('YYYY-MM-DDTHH:mm:ss.SSSZ');
+    props.setEventDate(localDateString);
   }
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

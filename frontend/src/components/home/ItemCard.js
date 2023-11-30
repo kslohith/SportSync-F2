@@ -171,8 +171,8 @@ const ItemCard = (props) => {
           <DateRangeIcon/>
         </Grid>
         <Grid item xs={8}>
-          <Typography variant="body1" style={{ color: 'grey'}}>{new Date(cardItem.date).toLocaleDateString()}</Typography>
-          <Typography variant="body1" style={{ color: 'grey'}}>{new Date(cardItem.date).toLocaleTimeString()}</Typography>
+          <Typography variant="body1" style={{ color: 'grey'}}>{new Date(props.cardItem.date).toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}</Typography>
+          <Typography variant="body1" style={{ color: 'grey'}}>{new Date(props.cardItem.date).toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}</Typography>
         </Grid>
       </Grid>
         {(userName === cardItem.organizer) ? <Grid container item xs={12} justifyContent="flex-end">

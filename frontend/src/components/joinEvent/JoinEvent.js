@@ -266,7 +266,7 @@ function FilteredCardList() {
               {filteredEvents.map((item, index) => {
                         if (ABmode && item.isPrivate == false) return (<React.Fragment key={index}></React.Fragment>);
                 return (<Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                  <ItemCardJoin cardItem={item} selectedEvent={setSelectedJoinEvent} setAction={setAction}/>
+                  <ItemCardJoin cardItem={item} selectedEvent={setSelectedJoinEvent} setAction={setAction} ABmode={ABmode}/>
                 </Grid>);
               })}
             </Grid>

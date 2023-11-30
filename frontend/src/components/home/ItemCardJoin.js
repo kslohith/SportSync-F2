@@ -20,6 +20,11 @@ function getCookieValue(key) {
   return null;
 }
 
+function translateSkill(skill) {
+  if (skill === "Beginner") return "Learning";
+  if (skill === "Intermidiate") return "Casual";
+  if (skill === "Advanced") return "Competitive";
+}
 function ItemCardJoin(props) {
 
   const userName = getCookieValue('user_id');
@@ -77,11 +82,10 @@ function ItemCardJoin(props) {
             </Grid>
         </Grid>
           <Grid container xs={12} style={{marginLeft: '14px'}}>
-            <Grid item xs={2}>
-              <ConfirmationNumberIcon />
-            </Grid>
             <Grid item xs={10}>
               <Typography variant="body1">Slots Remaining: {props.cardItem.slotsRemaining} </Typography>
+              <Typography variant="body1">Skill: { (props.ABmode) ? translateSkill(props.cardItem.eventSkill) : props.cardItem.eventSkill}</Typography>
+              {(props.ABmode) && <Typography variant="body1">Host: {props.cardItem.organizer.substring(0,props.cardItem.organizer.indexOf('@'))}</Typography>}
             </Grid>
           </Grid>
           <Grid container item xs={12} justifyContent="flex-end">

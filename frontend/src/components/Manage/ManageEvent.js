@@ -5,6 +5,63 @@ import axios from "axios";
 import AttendeeBox from "./AttendeeBox";
 import RequesteeBox from "./RequesteeBox";
 import DeleteIcon from '@mui/icons-material/Delete';
+import emailjs from 'emailjs-com';
+
+function sendAcceptNotif(email, eventName) {
+  const emailParams = {
+    to_email: email,
+    e_message: `Your request to join event ${eventName} has been approved!`,
+  };
+
+  emailjs
+  .send(
+    'service_kuya3oc',
+    'template_eqg87j9',
+    emailParams,
+    'KfXB4eRwr17xWB1Pd'
+  )
+    .then((response) => {
+      console.log('Email sent successfully:', response);
+      console.log(email);
+    })
+    .catch((error) => {
+      console.error('Error sending email:', error);
+      alert('Failed to send verification code via email.');
+    });
+}
+
+function sendDeleteNotif(attendees, requestedAttendees, eventName) {
+  var rep = "";
+  for (let i = 0; i < attendees.length; i++) {
+    rep += attendees[i];
+    if (i != attendees.length-1) rep+= ", "
+  }
+  if (requestedAttendees.length > 0) rep += ", "
+  for (let i = 0; i < requestedAttendees.length; i++) {
+    rep += requestedAttendees[i];
+    if (i != requestedAttendees.length-1) rep+= ", "
+  }
+  const emailParams = {
+    to_email: rep,
+    e_message: `Event ${eventName} has unfortunately been cancelled`,
+  };
+
+  emailjs
+  .send(
+    'service_kuya3oc',
+    'template_eqg87j9',
+    emailParams,
+    'KfXB4eRwr17xWB1Pd'
+  )
+    .then((response) => {
+      console.log('Email sent successfully:', response);
+      console.log(rep);
+    })
+    .catch((error) => {
+      console.error('Error sending email:', error);
+      alert('Failed to send verification code via email.');
+    });
+}
 
 const ManageEvent = () => {
   const [attendeeDetails, setAttendeeDetails] = useState([]);
@@ -106,6 +163,7 @@ const ManageEvent = () => {
     }).then((response) => {
         // Handle success if needed
         console.log('Attendee added successfully:', attendeeName);
+        sendAcceptNotif(attendeeName, attendeeDetails.eventName);
         handleRefresh();
       })
       .catch((error) => {
@@ -127,6 +185,7 @@ const ManageEvent = () => {
       }
     }).then((res)=> {
       console.log(res);
+      sendDeleteNotif(attendeeDetails.attendees, attendeeDetails.requestedAttendees, attendeeDetails.eventName);
       navigate(-1);
     }).catch((err)=> {
       console.log('There was issue in deleting this event');

@@ -45,6 +45,12 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
+function translateSkill(skill) {
+  if (skill === "Beginner") return "Learning";
+  if (skill === "Intermidiate") return "Casual";
+  if (skill === "Advanced") return "Competitive";
+}
+
 const ItemCard = (props) => {
   const [cardItem, setCardItem] = useState(props.cardItem);
   const [openModal, setOpenModal] = useState(false);
@@ -138,7 +144,7 @@ const ItemCard = (props) => {
       </Box>
     </Modal>
   }
-  {!removed && <Card variant="outlined" style={{ width: '100%', height: '180px' }}>
+  {!removed && <Card variant="outlined" style={{ width: '100%'}}>
     <CardContent>
       <Grid container spacing={2}>
         <Grid container item xs={6} spacing={2}>
@@ -156,6 +162,8 @@ const ItemCard = (props) => {
             <Grid item xs={9} style={{marginLeft: '4px'}}>
               <Typography variant="body1">{cardItem.sport}</Typography>
             </Grid>
+            <Typography variant="body1">Skill: { (props.ABmode) ? translateSkill(props.cardItem.eventSkill) : props.cardItem.eventSkill}</Typography>
+            {(props.ABmode) && <Typography variant="body1">Host: {props.cardItem.organizer.substring(0,props.cardItem.organizer.indexOf('@'))}</Typography>}
           </Grid>
         </Grid>
         <Grid container item xs={6} spacing={2}>

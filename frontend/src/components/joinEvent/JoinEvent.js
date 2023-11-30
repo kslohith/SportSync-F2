@@ -17,6 +17,7 @@ import MuiAlert from '@mui/material/Alert';
 import { logEvent } from "firebase/analytics";
 import analytics from "../../config/firebaseConfig";
 import { useOutletContext } from 'react-router-dom';
+import Card from '@mui/material/Card';
 
 const sportsData = ['Football', 'Basketball', 'Tennis', 'Cricket', 'Baseball', 'Badminton', 'Squash', 'Golf', 'Fencing'];
 
@@ -65,7 +66,8 @@ function FilteredCardList() {
   const [action, setAction] = useState(0); //0 - join/request, 1 - leave, 2 - unrequest
   const [alertOpen, setAlertOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-
+  const [refresh, setRefresh] = useState(true);
+  var num_items = 0; 
   const handleClose = () => {
     setSelectedJoinEvent(null);
     setShowPopup(false);
@@ -94,7 +96,7 @@ function FilteredCardList() {
           console.log(error);
         });
     }
-  }, [selectedSport, selectedDate]);
+  }, [selectedSport, selectedDate, refresh]);
 
   const handleSportChange = (event) => {
     setSelectedSport(event.target.value);
@@ -166,6 +168,7 @@ function FilteredCardList() {
         setShowLoading(false);
         setShowPopup(false);
         setAlertOpen(true);
+        setRefresh(!refresh);
       })
       .catch((error) => {
         setShowLoading(false);
@@ -210,6 +213,7 @@ function FilteredCardList() {
         setShowLoading(false);
         setShowPopup(false);
         setAlertOpen(true);
+        setRefresh(!refresh);
       })
       .catch((error) => {
         setShowLoading(false);
@@ -264,10 +268,16 @@ function FilteredCardList() {
           ) : (
             <Grid container spacing={2}>
               {filteredEvents.map((item, index) => {
-                        if (ABmode && item.isPrivate == false) return (<React.Fragment key={index}></React.Fragment>);
-                return (<Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                  <ItemCardJoin cardItem={item} selectedEvent={setSelectedJoinEvent} setAction={setAction} ABmode={ABmode}/>
-                </Grid>);
+                if (ABmode && item.isPrivate == false) return (<React.Fragment key={index}></React.Fragment>);
+                num_items++; 
+                return (
+                <React.Fragment key ={index}>
+                  {(num_items%5 == 0 && !ABmode) && <Grid item xs={12} sm={6} md={4} lg={3}><Card style={{width:'100%', height:'200px', backgroundImage: `url(${require(`../../assets/mentor.jpg`)})` }}>Advertisment</Card></Grid>}
+                  <Grid item xs={12} sm={6} md={4} lg={3}>
+                    <ItemCardJoin cardItem={item} selectedEvent={setSelectedJoinEvent} setAction={setAction} ABmode={ABmode}/>
+                  </Grid>
+                </React.Fragment>
+                );
               })}
             </Grid>
           )}
@@ -313,6 +323,7 @@ function FilteredCardList() {
               {(selectedJoinEvent?.isPrivate) ? "Request to Join" : "Join"}
             </Button>
           </DialogActions>
+          {(ABmode) &&  <Card style={{width:'100%', height:'100px', background:'lightgray', display:'flex', justifyContent:'center', alignItems:'center'}}><Typography>Advert</Typography></Card>}
         </BootstrapDialog>
       </React.Fragment>
       <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleAlertClose}>

@@ -12,6 +12,7 @@ import analytics from "../../config/firebaseConfig";
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import { useOutletContext } from 'react-router-dom';
 
 function getCookieValue(key) {
     const cookies = document.cookie.split(';');
@@ -58,6 +59,7 @@ function CustomTabPanel(props) {
   }
 
 const Home = () => {
+    const [ABmode, setABmode] = useOutletContext();
     const [userDetails, setUserDetails] = React.useState([]);
     const [showLoading, setShowLoading] = React.useState(false);
     const [value, setValue] = React.useState(0);
@@ -154,7 +156,7 @@ const Home = () => {
                     <Grid container spacing={2} style={{ padding: '0px'}}>
                         {userDetails.map((item, index) => (
                             <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                                <ItemCard cardItem={item}/>
+                                <ItemCard cardItem={item} ABmode={ABmode}/>
                             </Grid>
                         ))}
                     </Grid>
@@ -163,7 +165,7 @@ const Home = () => {
                     <Grid container spacing={2}>
                         {upcomingGame.map((item, index) => (
                             <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                                <ItemCard cardItem={item} ctype={1}/>
+                                <ItemCard cardItem={item} ctype={1} ABmode={ABmode}/>
                             </Grid>
                         ))}
                     </Grid>
@@ -172,7 +174,7 @@ const Home = () => {
                     <Grid container spacing={2}>
                         {requests.map((item, index) => (
                             <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                                <ItemCard cardItem={item} ctype={2}/>
+                                <ItemCard cardItem={item} ctype={2} ABmode={ABmode}/>
                             </Grid>
                         ))}
                     </Grid>

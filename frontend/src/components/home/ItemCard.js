@@ -147,35 +147,34 @@ const ItemCard = (props) => {
   {!removed && <Card variant="outlined" style={{ width: '100%'}}>
     <CardContent>
       <Grid container spacing={2}>
-        <Grid container item xs={6} spacing={2}>
-          <Grid item xs={14}>
-            <Typography variant="body1" fontWeight="bold" style={{ textTransform: 'uppercase', fontSize: '14px' }}>{cardItem.eventName}</Typography>
-          </Grid>
-          <Grid container xs={12} style={{ marginLeft: '10px', marginTop: '4px'}}>
-            <Grid item xs={2}><LocationOnIcon /></Grid>
-            <Grid item xs={10}>
-              <Typography variant="body1">{cardItem.venue}</Typography>
-            </Grid>
-          </Grid>
-          <Grid container xs={12} style={{ marginLeft: '10px'}}>
-            <Grid item xs={2}><SportsIcon sport={cardItem.sport} /></Grid>
-            <Grid item xs={9} style={{marginLeft: '4px'}}>
-              <Typography variant="body1">{cardItem.sport}</Typography>
-            </Grid>
-            <Typography variant="body1">Skill: { (props.ABmode) ? translateSkill(props.cardItem.eventSkill) : props.cardItem.eventSkill}</Typography>
-            {(props.ABmode) && <Typography variant="body1">Host: {props.cardItem.organizer.substring(0,props.cardItem.organizer.indexOf('@'))}</Typography>}
+      <Grid container item xs={6} spacing={2}>
+        <Grid item xs={14}>
+          <Typography variant="body1" fontWeight="bold" style={{ textTransform: 'uppercase', fontSize: '14px' }}>{cardItem.eventName}</Typography>
+        </Grid>
+        <Grid container xs={12} style={{ marginLeft: '10px', marginTop: '4px'}}>
+          <Grid item xs={2}><LocationOnIcon /></Grid>
+          <Grid item xs={10}>
+            <Typography variant="body1">{cardItem.venue}</Typography>
           </Grid>
         </Grid>
-        <Grid container item xs={6} spacing={2}>
-            <Grid item xs={2}>
-            <DateRangeIcon/>
-            </Grid>
-            <Grid item xs={8}>
-            <Typography variant="body1" style={{ color: 'grey'}}>{new Date(cardItem.date).toISOString().split('T')[0]}</Typography>
-            <Typography variant="body1" style={{ color: 'grey'}}>{new Date(cardItem.date).toISOString().split('T')[1].split('.')[0]}</Typography>
-            </Grid>
+        <Grid container xs={12} style={{ marginLeft: '10px'}}>
+          <Grid item xs={2}><SportsIcon sport={cardItem.sport} /></Grid>
+          <Grid item xs={9} style={{marginLeft: '4px'}}>
+            <Typography variant="body1">{cardItem.sport}</Typography>
+          </Grid>
+          <Typography variant="body1">Skill: { (props.ABmode) ? translateSkill(props.cardItem.eventSkill) : props.cardItem.eventSkill}</Typography>
+          {(props.ABmode) && <Typography variant="body1">Host: {props.cardItem.organizer.substring(0,props.cardItem.organizer.indexOf('@'))}</Typography>}
         </Grid>
-
+      </Grid>
+      <Grid container item xs={6} spacing={2}>
+        <Grid item xs={2}>
+          <DateRangeIcon/>
+        </Grid>
+        <Grid item xs={8}>
+          <Typography variant="body1" style={{ color: 'grey'}}>{new Date(cardItem.date).toLocaleDateString()}</Typography>
+          <Typography variant="body1" style={{ color: 'grey'}}>{new Date(cardItem.date).toLocaleTimeString()}</Typography>
+        </Grid>
+      </Grid>
         {(userName === cardItem.organizer) ? <Grid container item xs={12} justifyContent="flex-end">
           <Button variant="contained" color="primary" onClick={handleAttendeesClick}>
             Manage 

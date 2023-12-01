@@ -36,8 +36,17 @@ const CreateScreen = () => {
   const [privateEvent, setPrivateEvent] = React.useState(false);
   const userId = getCookieValue('user_id');
   const navigate = useNavigate();
-  
-  
+
+  React.useEffect(() => {
+    axios.get(`https://sportssync-backend.onrender.com/getABstatus`)
+        .then((response) => {
+            console.log(response.data.data[0].enableABtest)
+            setABmode(response.data.data[0].enableABtest)
+          })
+        .catch((error) => {
+          console.log(error);
+        });
+      },[]);
 
   function getCookieValue(key) {
     const cookies = document.cookie.split(';');
@@ -202,7 +211,7 @@ const CreateScreen = () => {
       </Grid>
     </CardContent>
     </Card>
-    <Button variant="contained" sx={{marginTop:'30px', padding:'3px', bgcolor:'purple'}} onClick={()=>setABmode(!ABmode)}>For Dev use only!</Button>
+    {/* <Button variant="contained" sx={{marginTop:'30px', padding:'3px', bgcolor:'purple'}} onClick={()=>setABmode(!ABmode)}>For Dev use only!</Button> */}
     </React.Fragment>
   );
 }

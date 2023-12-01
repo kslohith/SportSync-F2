@@ -114,8 +114,17 @@ const Home = () => {
                     console.log(error);
                 });
             }
+
+            axios.get(`https://sportssync-backend.onrender.com/getABstatus`)
+            .then((response) => {
+                console.log(response.data.data[0].enableABtest)
+                setABmode(response.data.data[0].enableABtest)
+              })
+            .catch((error) => {
+              console.log(error);
+            });
+
         },[]);
-       
   
     const navigate = useNavigate();
     const decideOperation = (operation) => {

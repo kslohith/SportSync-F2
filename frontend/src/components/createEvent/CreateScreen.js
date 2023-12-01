@@ -84,7 +84,11 @@ const CreateScreen = () => {
       alert('Invalid input');
       return;
     }
-    setDisableSave(true);
+  
+    const adjustedDate = new Date(date);
+    const options = { timeZone: 'America/New_York', hour12: false, year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+    const dateString = new Intl.DateTimeFormat('en-US', options).format(adjustedDate);
+  
     axios({
       method: 'post',
       url: 'https://sportssync-backend.onrender.com/createEvent',
@@ -93,7 +97,7 @@ const CreateScreen = () => {
         eventName: eventName,
         organizer: userId,
         venue: location,
-        date: date,
+        date: dateString,
         slotsRemaining: cap - 1,
         isPrivate: privateEvent,
         capacity: cap,
@@ -107,7 +111,7 @@ const CreateScreen = () => {
       .then((response) => {
         const userName = getCookieValue('user_id')
         logEvent(analytics, 'user_created_event', {
-            user_email: {userName}
+          user_email: {userName}
         });
         console.log(response);
         navigate("/dashboard");
@@ -117,10 +121,23 @@ const CreateScreen = () => {
         setDisableSave(false);
       });
   };
+  
 
   const setEventDate = (selectedDate) => {
-    setDate(selectedDate);
-  }
+    // Log the selected date
+    console.log(selectedDate);
+  
+    // Format the date manually with options
+    const options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZone: 'America/New_York' };
+    const dateFormatter = new Intl.DateTimeFormat('en-US', options);
+    const dateString = dateFormatter.format(new Date(selectedDate));
+  
+    // Log the formatted date
+    console.log(dateString);
+  
+    // Set the state with the formatted date
+    setDate(dateString);
+  };
   
   return (
     <React.Fragment>
@@ -153,7 +170,7 @@ const CreateScreen = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Datepicker date={date} setEventDate={setEventDate}/>
+          <Datepicker date={date} setEventDate={setEventDate}/> 
         </Grid>
 
         <Grid item xs={12}>

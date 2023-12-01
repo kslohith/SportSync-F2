@@ -86,7 +86,7 @@ function FilteredCardList() {
             const registeredEvent = ((item.attendees.length > 0 && item.attendees.includes(userName)) 
               || (item.requestedAttendees.length > 0 && item.requestedAttendees.includes(userName)));
             const sportMatches = selectedSport === '' || item.sport === selectedSport;
-            const dateMatches = true || (selectedDate===null) || getFormattedDate(new Date(item.date)) === selectedDate?.split('T')[0];
+            const dateMatches = (selectedDate===null) || getFormattedDate(new Date(item.date)) === selectedDate?.split('T')[0];
             return !registeredEvent && sportMatches && dateMatches;
           });
           setFilteredEvents(filteredEvents);
@@ -252,6 +252,7 @@ function FilteredCardList() {
           <Grid item xs={6} sm={6}>
             <Datepicker
               setEventDate={handleDateChange}
+              date={selectedDate}
             />
           </Grid>
         </Grid>

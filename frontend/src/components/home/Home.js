@@ -142,15 +142,15 @@ const Home = () => {
                 <CircularProgress />
             </Box>}
             {!showLoading && <Grid container spacing={2}>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                     <CardLayout operation={"play"} callback={decideOperation} style={{marginBottom: '8px'}}/>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                     <CardLayout operation={"organize"} callback={decideOperation} style={{margin: '8px'}}/>
                 </Grid>
-                <Grid item xs={4}>
+                {/* <Grid item xs={4}>
                     <CardLayout operation={"mentor"} callback={decideOperation} style={{margin: '8px'}}/>
-                </Grid>
+                </Grid> */}
             </Grid>
             }
             {!showLoading && <Box sx={{ width: '100%', padding: '0px' }}>
